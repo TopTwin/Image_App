@@ -11,6 +11,7 @@ namespace ImgApp_2_WinForms
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
+        /// test
         [STAThread]
         static void Main()
         {
