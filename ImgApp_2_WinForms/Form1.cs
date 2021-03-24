@@ -178,9 +178,9 @@ namespace ImgApp_2_WinForms
                     var pix1 = working_image.GetPixel(j, i);        //получаем пиксили картинок
                     var pix2 = additional_image.GetPixel(j, i);
 
-                    int R = pix1.R;        //сохраняем значение цветов основной картинки
-                    int G = pix1.G;        //если будут выбраны определенные цветовые каналы
-                    int B = pix1.B;        //тот цвет который не будет задействован будет равен основной картинке
+                    int R = 0;        
+                    int G = 0;        
+                    int B = 0;        
 
                     if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
                     R = Clamp((pix1.R + pix2.R) / 2, 0, 255);
@@ -209,9 +209,9 @@ namespace ImgApp_2_WinForms
                     var pix1 = working_image.GetPixel(j, i);        //получаем пиксили картинок
                     var pix2 = additional_image.GetPixel(j, i);
 
-                    int R = pix1.R;        //сохраняем значение цветов основной картинки
-                    int G = pix1.G;        //если будут выбраны определенные цветовые каналы
-                    int B = pix1.B;        //тот цвет который не будет задействован будет равен основной картинке
+                    int R = 0;
+                    int G = 0;
+                    int B = 0;
 
                     if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
                         R = Clamp((pix1.R + pix2.R), 0, 255);
@@ -252,9 +252,9 @@ namespace ImgApp_2_WinForms
                 {
                     var pix1 = working_image.GetPixel(j, i);        //получаем пиксили картинок
 
-                    int R = pix1.R;        //сохраняем значение цветов основной картинки
-                    int G = pix1.G;        //если будут выбраны определенные цветовые каналы
-                    int B = pix1.B;        //тот цвет который не будет задействован будет равен основной картинке
+                    int R = 0;
+                    int G = 0;
+                    int B = 0;
 
                     if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
                         R = Clamp((int)(pix1.R * koef), 0, 255);
@@ -283,9 +283,9 @@ namespace ImgApp_2_WinForms
                     var pix1 = working_image.GetPixel(j, i);        //получаем пиксили картинок
                     var pix2 = additional_image.GetPixel(j, i);
 
-                    int R = pix1.R;        //сохраняем значение цветов основной картинки
-                    int G = pix1.G;        //если будут выбраны определенные цветовые каналы
-                    int B = pix1.B;        //тот цвет который не будет задействован будет равен основной картинке
+                    int R = 0;
+                    int G = 0;
+                    int B = 0;
 
                     if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
                         if((pix1.R > pix2.R))
@@ -325,9 +325,9 @@ namespace ImgApp_2_WinForms
                     var pix1 = working_image.GetPixel(j, i);        //получаем пиксили картинок
                     var pix2 = additional_image.GetPixel(j, i);
 
-                    int R = pix1.R;        //сохраняем значение цветов основной картинки
-                    int G = pix1.G;        //если будут выбраны определенные цветовые каналы
-                    int B = pix1.B;        //тот цвет который не будет задействован будет равен основной картинке
+                    int R = 0;
+                    int G = 0;
+                    int B = 0;
 
                     if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
                         if ((pix1.R < pix2.R))
