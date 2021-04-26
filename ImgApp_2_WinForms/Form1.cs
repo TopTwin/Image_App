@@ -14,7 +14,7 @@ namespace ImgApp_2_WinForms
 {
     public partial class Form1 : Form
     {
-        private Bitmap WorkingImage = null;
+        private Bitmap workingImage = null;
         private Bitmap secondImage = null;
         private Bitmap result_image = null;
         private List<Bitmap> images = null;
@@ -24,7 +24,7 @@ namespace ImgApp_2_WinForms
         public Form1()
         {
             InitializeComponent();
-            WorkingImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            workingImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             result_image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             secondImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             images = new List<Bitmap>();
@@ -32,9 +32,10 @@ namespace ImgApp_2_WinForms
             if (pictureBox1.Image != null)
                 pictureBox1.Image.Dispose();
 
-            pictureBox1.Image = WorkingImage;
+            pictureBox1.Image = workingImage;
             radioButton1.Checked = true;
             comboBox1.SelectedIndex = 0;
+            comboBox2.SelectedIndex = 0;
         }
 
         private void Open_Click(object sender, EventArgs e)
@@ -54,25 +55,25 @@ namespace ImgApp_2_WinForms
             {
                 if (pictureBox2.Image == null)       //если есть место для первой картинки, заполняем его
                 {
-                    WorkingImage = new Bitmap(openFileDialog.FileName);    //считываем картинку
-                    images.Add(WorkingImage);                              //добавляем картинку в память
-                    pictureBox1.Image = WorkingImage;                      //отображаем ее в маленькой рамке справа
+                    workingImage = new Bitmap(openFileDialog.FileName);    //считываем картинку
+                    images.Add(workingImage);                              //добавляем картинку в память
+                    pictureBox1.Image = workingImage;                      //отображаем ее в маленькой рамке справа
                     //изменяем размер картинки под маленькое окно
-                    WorkingImage = new Bitmap(WorkingImage, new Size(pictureBox2.Width, pictureBox2.Height));
-                    pictureBox2.Image = WorkingImage;                      //отображаем ее в основном окне
-                    WorkingImage = (Bitmap)images[0].Clone();
+                    workingImage = new Bitmap(workingImage, new Size(pictureBox2.Width, pictureBox2.Height));
+                    pictureBox2.Image = workingImage;                      //отображаем ее в основном окне
+                    workingImage = (Bitmap)images[0].Clone();
                     if (panel1.Visible == true)
                         GisDraw();
                 }
                 else                               //если есть место для второй картинки, заполняем его
                 {
-                    WorkingImage = new Bitmap(openFileDialog.FileName);    //считываем картинку
-                    images.Add(WorkingImage);                              //добавляем в память новую картинку
-                    pictureBox1.Image = WorkingImage;                      //отображаем ее в маленькой рамке справа
+                    workingImage = new Bitmap(openFileDialog.FileName);    //считываем картинку
+                    images.Add(workingImage);                              //добавляем в память новую картинку
+                    pictureBox1.Image = workingImage;                      //отображаем ее в маленькой рамке справа
                     //изменяем размер картинки под маленькое окно
-                    WorkingImage = new Bitmap(WorkingImage, new Size(pictureBox3.Width, pictureBox3.Height));
-                    pictureBox3.Image = WorkingImage;                      //отображаем ее в основном окне
-                    WorkingImage = (Bitmap)images[1].Clone();
+                    workingImage = new Bitmap(workingImage, new Size(pictureBox3.Width, pictureBox3.Height));
+                    pictureBox3.Image = workingImage;                      //отображаем ее в основном окне
+                    workingImage = (Bitmap)images[1].Clone();
                     if (panel1.Visible == true)
                         GisDraw();
                 }
@@ -106,16 +107,16 @@ namespace ImgApp_2_WinForms
                 {
                     if (size_1.Width * size_1.Height > size_2.Width * size_2.Height)    //ищем наибольшую картинку
                     {
-                        WorkingImage = (Bitmap)images[0].Clone();          //берем за основу большую картинку
+                        workingImage = (Bitmap)images[0].Clone();          //берем за основу большую картинку
                         secondImage = new Bitmap(images[1]);           //в доп переменную кладем вторую
                     }
                     else
                     {
-                        WorkingImage = (Bitmap)images[1].Clone();          //тоже самое что чуть выше
+                        workingImage = (Bitmap)images[1].Clone();          //тоже самое что чуть выше
                         secondImage = new Bitmap(images[0]);
                     }
                     //увеличим меньшую картинку до размеров большой
-                    secondImage = new Bitmap(secondImage, new Size(WorkingImage.Width, WorkingImage.Height));
+                    secondImage = new Bitmap(secondImage, new Size(workingImage.Width, workingImage.Height));
                 }
 
                 switch (comboBox1.SelectedIndex)
@@ -154,9 +155,9 @@ namespace ImgApp_2_WinForms
             if (images.Count >= 1)
             {
                 pictureBox1.Image = images[0];
-                if (WorkingImage != null)
-                    WorkingImage.Dispose();
-                WorkingImage = (Bitmap)images[0].Clone();
+                if (workingImage != null)
+                    workingImage.Dispose();
+                workingImage = (Bitmap)images[0].Clone();
 
                 if (panel1.Visible == true)
                 {
@@ -170,9 +171,9 @@ namespace ImgApp_2_WinForms
             if (images.Count >= 2)
             {
                 pictureBox1.Image = images[1];
-                if (WorkingImage != null)
-                    WorkingImage.Dispose();
-                WorkingImage = (Bitmap)images[1].Clone();
+                if (workingImage != null)
+                    workingImage.Dispose();
+                workingImage = (Bitmap)images[1].Clone();
 
                 if (panel1.Visible == true)
                 {
@@ -185,10 +186,10 @@ namespace ImgApp_2_WinForms
         {
             if (result_image != null)
             {
-                if (WorkingImage != null)
-                    WorkingImage.Dispose();
+                if (workingImage != null)
+                    workingImage.Dispose();
                 pictureBox1.Image = result_image;
-                WorkingImage = (Bitmap)result_image.Clone();
+                workingImage = (Bitmap)result_image.Clone();
             }
 
             if (panel1.Visible == true)
@@ -200,11 +201,11 @@ namespace ImgApp_2_WinForms
         private void ArithmeticMeanPix()
         {
 
-            for (int i = 0; i < WorkingImage.Height; i++)      //цикл перебора пикселей
+            for (int i = 0; i < workingImage.Height; i++)      //цикл перебора пикселей
             {
-                for (int j = 0; j < WorkingImage.Width; j++)
+                for (int j = 0; j < workingImage.Width; j++)
                 {
-                    var pix1 = WorkingImage.GetPixel(j, i);        //получаем пиксили картинок
+                    var pix1 = workingImage.GetPixel(j, i);        //получаем пиксили картинок
                     var pix2 = secondImage.GetPixel(j, i);
 
                     int R = 0;
@@ -219,23 +220,23 @@ namespace ImgApp_2_WinForms
                         B = Clamp((pix1.B + pix2.B) / 2, 0, 255);
 
                     pix1 = Color.FromArgb(R, G, B);
-                    WorkingImage.SetPixel(j, i, pix1);
+                    workingImage.SetPixel(j, i, pix1);
                 }
             }
             if (result_image != null)
                 result_image.Dispose();
-            result_image = (Bitmap)WorkingImage.Clone();
+            result_image = (Bitmap)workingImage.Clone();
             pictureBox4.Image = result_image;
-            pictureBox1.Image = WorkingImage;
+            pictureBox1.Image = workingImage;
             pictureBox1.Refresh();
         }
         private void SummPix()
         {
-            for (int i = 0; i < WorkingImage.Height; i++)      //цикл перебора пикселей
+            for (int i = 0; i < workingImage.Height; i++)      //цикл перебора пикселей
             {
-                for (int j = 0; j < WorkingImage.Width; j++)
+                for (int j = 0; j < workingImage.Width; j++)
                 {
-                    var pix1 = WorkingImage.GetPixel(j, i);        //получаем пиксили картинок
+                    var pix1 = workingImage.GetPixel(j, i);        //получаем пиксили картинок
                     var pix2 = secondImage.GetPixel(j, i);
 
                     int R = 0;
@@ -250,14 +251,14 @@ namespace ImgApp_2_WinForms
                         B = Clamp((pix1.B + pix2.B), 0, 255);
 
                     pix1 = Color.FromArgb(R, G, B);
-                    WorkingImage.SetPixel(j, i, pix1);
+                    workingImage.SetPixel(j, i, pix1);
                 }
             }
             if (result_image != null)
                 result_image.Dispose();
-            result_image = (Bitmap)WorkingImage.Clone();
+            result_image = (Bitmap)workingImage.Clone();
             pictureBox4.Image = result_image;
-            pictureBox1.Image = WorkingImage;
+            pictureBox1.Image = workingImage;
             pictureBox1.Refresh();
         }
         private void CompositionPix()
@@ -275,11 +276,11 @@ namespace ImgApp_2_WinForms
                     );
                 return;
             }
-            for (int i = 0; i < WorkingImage.Height; i++)      //цикл перебора пикселей
+            for (int i = 0; i < workingImage.Height; i++)      //цикл перебора пикселей
             {
-                for (int j = 0; j < WorkingImage.Width; j++)
+                for (int j = 0; j < workingImage.Width; j++)
                 {
-                    var pix1 = WorkingImage.GetPixel(j, i);        //получаем пиксили картинок
+                    var pix1 = workingImage.GetPixel(j, i);        //получаем пиксили картинок
 
                     int R = 0;
                     int G = 0;
@@ -293,23 +294,23 @@ namespace ImgApp_2_WinForms
                         B = Clamp((int)(pix1.B * koef), 0, 255);
 
                     pix1 = Color.FromArgb(R, G, B);
-                    WorkingImage.SetPixel(j, i, pix1);
+                    workingImage.SetPixel(j, i, pix1);
                 }
             }
             if (result_image != null)
                 result_image.Dispose();
-            result_image = (Bitmap)WorkingImage.Clone();
+            result_image = (Bitmap)workingImage.Clone();
             pictureBox4.Image = result_image;
-            pictureBox1.Image = WorkingImage;
+            pictureBox1.Image = workingImage;
             pictureBox1.Refresh();
         }
         private void MaxPix()
         {
-            for (int i = 0; i < WorkingImage.Height; i++)      //цикл перебора пикселей
+            for (int i = 0; i < workingImage.Height; i++)      //цикл перебора пикселей
             {
-                for (int j = 0; j < WorkingImage.Width; j++)
+                for (int j = 0; j < workingImage.Width; j++)
                 {
-                    var pix1 = WorkingImage.GetPixel(j, i);        //получаем пиксили картинок
+                    var pix1 = workingImage.GetPixel(j, i);        //получаем пиксили картинок
                     var pix2 = secondImage.GetPixel(j, i);
 
                     int R = 0;
@@ -335,23 +336,23 @@ namespace ImgApp_2_WinForms
                             B = Clamp((pix2.B), 0, 255);
 
                     pix1 = Color.FromArgb(R, G, B);
-                    WorkingImage.SetPixel(j, i, pix1);
+                    workingImage.SetPixel(j, i, pix1);
                 }
             }
             if (result_image != null)
                 result_image.Dispose();
-            result_image = (Bitmap)WorkingImage.Clone();
+            result_image = (Bitmap)workingImage.Clone();
             pictureBox4.Image = result_image;
-            pictureBox1.Image = WorkingImage;
+            pictureBox1.Image = workingImage;
             pictureBox1.Refresh();
         }
         private void MinPix()
         {
-            for (int i = 0; i < WorkingImage.Height; i++)      //цикл перебора пикселей
+            for (int i = 0; i < workingImage.Height; i++)      //цикл перебора пикселей
             {
-                for (int j = 0; j < WorkingImage.Width; j++)
+                for (int j = 0; j < workingImage.Width; j++)
                 {
-                    var pix1 = WorkingImage.GetPixel(j, i);        //получаем пиксили картинок
+                    var pix1 = workingImage.GetPixel(j, i);        //получаем пиксили картинок
                     var pix2 = secondImage.GetPixel(j, i);
 
                     int R = 0;
@@ -377,14 +378,14 @@ namespace ImgApp_2_WinForms
                             B = Clamp((pix2.B), 0, 255);
 
                     pix1 = Color.FromArgb(R, G, B);
-                    WorkingImage.SetPixel(j, i, pix1);
+                    workingImage.SetPixel(j, i, pix1);
                 }
             }
             if (result_image != null)
                 result_image.Dispose();
-            result_image = (Bitmap)WorkingImage.Clone();
+            result_image = (Bitmap)workingImage.Clone();
             pictureBox4.Image = result_image;
-            pictureBox1.Image = WorkingImage;
+            pictureBox1.Image = workingImage;
             pictureBox1.Refresh();
         }
         private void R_CheckedChanged(object sender, EventArgs e)
@@ -483,11 +484,11 @@ namespace ImgApp_2_WinForms
             pictureBox5.Image = new Bitmap(pictureBox5.Width, pictureBox5.Height);
 
             int[] N = new int[256];
-            for (int i = 0; i < WorkingImage.Width; i++)      //цикл перебора пикселей
+            for (int i = 0; i < workingImage.Width; i++)      //цикл перебора пикселей
             {
-                for (int j = 0; j < WorkingImage.Height; j++)
+                for (int j = 0; j < workingImage.Height; j++)
                 {
-                    var pix1 = WorkingImage.GetPixel(i, j);        //получаем пиксили картинок
+                    var pix1 = workingImage.GetPixel(i, j);        //получаем пиксили картинок
 
                     var c = (pix1.R + pix1.B + pix1.G) / 3;
                     N[c]++;
@@ -531,14 +532,14 @@ namespace ImgApp_2_WinForms
                 X[i] = Convert.ToDouble(dataGridView1[0, i].Value);
                 Y[i] = Convert.ToDouble(dataGridView1[1, i].Value);
             }
-            LineInterpolation lineInterpolation = new LineInterpolation(n, X, Y);     //Создаем сплайн
+            LineInterpolation lineInterpolation = new LineInterpolation(n, X, Y);
             int R = 0;
             int G = 0;
             int B = 0;
-            for (int i = 0; i < WorkingImage.Width; i++)         //Перебираем пиксели
-                for (int j = 0; j < WorkingImage.Height; j++)
+            for (int i = 0; i < workingImage.Width; i++)         //Перебираем пиксели
+                for (int j = 0; j < workingImage.Height; j++)
                 {
-                    var pix = WorkingImage.GetPixel(i, j);      //Считываем пиксель
+                    var pix = workingImage.GetPixel(i, j);      //Считываем пиксель
                     double c = (pix.R + pix.B + pix.G) / 3;        //Считаем его яркость
                     double sum = pix.R + pix.B + pix.G;
                     double k = lineInterpolation.Interpolate(c);    //Производим градационные преобразования
@@ -556,21 +557,21 @@ namespace ImgApp_2_WinForms
                         B = (int)Clamp((k), 0, 255);
                     }
                     pix = Color.FromArgb(R, G, B);
-                    WorkingImage.SetPixel(i, j, pix);
+                    workingImage.SetPixel(i, j, pix);
                 }
             if (result_image != null)
                 result_image.Dispose();
-            result_image = (Bitmap)WorkingImage.Clone();
+            result_image = (Bitmap)workingImage.Clone();
             pictureBox4.Image = result_image;
-            pictureBox1.Image = WorkingImage;
+            pictureBox1.Image = workingImage;
             pictureBox1.Refresh();
-
+            
             if(pictureBox6.Visible == true)
             {
-                PaitGraphic();
+                PaintGraphic();
                 pictureBox6.Refresh();
             }
-
+            
             if(panel1.Visible == true)
             {
                 GisDraw();
@@ -612,7 +613,7 @@ namespace ImgApp_2_WinForms
             if (pictureBox6.Visible == false)
             {
                 pictureBox6.Visible = true;
-                PaitGraphic();
+                PaintGraphic();
             }
             else
             {
@@ -620,7 +621,7 @@ namespace ImgApp_2_WinForms
             }
         }
 
-        private void PaitGraphic()
+        private void PaintGraphic()
         {
             if (pictureBox6.Image != null)
                 pictureBox6.Image.Dispose();
@@ -658,6 +659,208 @@ namespace ImgApp_2_WinForms
 
             grap.Dispose();
             pp.Dispose();
+        }
+
+        private void pictureBox7_MouseEnter(object sender, EventArgs e)
+        {
+            if (pictureBox7.Image != null)
+                pictureBox7.Image.Dispose();
+           
+            pictureBox7.Image = new Bitmap(pictureBox7.Width, pictureBox7.Height);
+           
+            pictureBox7.MouseClick += new MouseEventHandler(lulJS);
+           
+            Graphics grap = Graphics.FromImage(pictureBox7.Image);
+            Pen pp = new Pen(Color.FromArgb(0, 0, 0), 1);
+            
+            grap.DrawLine(pp, 0, 255, 255, 0);
+            grap.DrawRectangle(pp, 0, 255, 3, 3);
+            grap.DrawRectangle(pp, 255, 0, 3, 3);
+            
+            grap.Dispose();
+            pp.Dispose();
+        }
+
+
+        private void lulJS(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            Graphics grap = Graphics.FromImage(pictureBox7.Image);
+            Pen pp = new Pen(Color.FromArgb(0, 0, 0), 1);
+
+            Point point = e.Location;
+            grap.DrawRectangle(pp, point.X, point.Y, 3, 3);
+
+            pictureBox7.Refresh();
+
+            grap.Dispose();
+            pp.Dispose();
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            if (panel3.Visible == true)
+                panel3.Visible = false;
+            else panel3.Visible = true;
+
+            if(comboBox2.SelectedIndex == 1 || 
+               comboBox2.SelectedIndex == 2)
+            {
+                comboBox2.Size = new Size(132, 80);
+                comboBox2.Location = new Point(16, 6);
+                button11.Location = new Point(29, 42);
+            }
+            else
+            {
+
+            }
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            int n = comboBox2.SelectedIndex;
+            switch(n)
+            {
+                case 0:     //Критерий Гаврилова
+                    {
+                        Gavrilov();
+                        break;
+                    }
+                case 1:     //Критерий Отсу
+                    {
+                        Otsu();
+                        break;
+                    }
+                case 2:     //Критерий Ниблека
+                    {
+
+                        break;
+                    }
+                case 3:     //Критерий Сауволы
+                    {
+
+                        break;
+                    }
+                case 4:     //Критерий Кристиана Вульфа
+                    {
+
+                        break;
+                    }
+                case 5:     //Критерий Брэдли-Рота
+                    {
+
+                        break;
+                    }
+            }
+                
+        }
+        private void Otsu()
+        {
+            int w = workingImage.Width;
+            int h = workingImage.Height;
+            int[] N = new int[256];
+            int all_pixel_count = w * h;
+            int all_intensity_sum = 0; int k = 0;
+            int[] tmas = new int[w * h + 1];
+            for (int i = 0; i < h; ++i)
+            {
+                for (int j = 0; j < w; ++j)
+                {
+                    var pix1 = workingImage.GetPixel(j, i);
+                    int r1 = pix1.R;
+                    int g1 = pix1.G;
+                    int b1 = pix1.B;
+                    all_intensity_sum += (r1 + g1 + b1) / 3;
+                    tmas[k] = (r1 + g1 + b1) / 3; k++;
+                    N[(r1 + g1 + b1) / 3]++;
+                }
+            }
+
+
+            int best_thresh = 0;
+            double best_sigma = 0.0;
+
+            int first_class_pixel_count = 0;
+            int first_class_intensity_sum = 0;
+
+            // Перебираем границу между классами
+            // thresh < INTENSITY_LAYER_NUMBER - 1, т.к. при 255 в ноль уходит знаменатель внутри for
+            for (int thresh = 0; thresh < 255; ++thresh)
+            {
+                first_class_pixel_count += N[thresh];
+                first_class_intensity_sum += thresh * N[thresh];
+
+                double first_class_prob = first_class_pixel_count / (double)all_pixel_count;
+                double second_class_prob = 1.0 - first_class_prob;
+
+                double first_class_mean = first_class_intensity_sum / (double)first_class_pixel_count;
+                double second_class_mean = (all_intensity_sum - first_class_intensity_sum)
+                    / (double)(all_pixel_count - first_class_pixel_count);
+
+                double mean_delta = first_class_mean - second_class_mean;
+
+                double sigma = first_class_prob * second_class_prob * mean_delta * mean_delta;
+
+                if (sigma > best_sigma)
+                {
+                    best_sigma = sigma;
+                    best_thresh = thresh;
+                }
+            }
+            k = 0;
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    Color pix;
+                    if (tmas[k] <= best_thresh)
+                    {
+                        pix = Color.FromArgb(0, 0, 0);
+                    }
+                    else
+                    {
+                        pix = Color.FromArgb(255, 255, 255);
+                    }
+                    workingImage.SetPixel(j, i, pix); k++;
+                }
+            }
+
+            pictureBox1.Image = workingImage;
+            pictureBox1.Refresh();
+
+            result_image = (Bitmap)workingImage.Clone();
+            pictureBox4.Image = result_image;
+            pictureBox4.Refresh();
+        }
+        private void Gavrilov()
+        {
+            double mas = new double();
+            double[,] lul = new double[workingImage.Width,workingImage.Height];
+
+            for(int i = 0; i < workingImage.Width; i++)
+                for(int j = 0; j < workingImage.Height; j++)
+                {
+                    var pix = workingImage.GetPixel(i, j);      //Считываем пиксель
+                    lul[i, j] = (pix.R + pix.B + pix.G) / 3;
+                    mas += (pix.R + pix.B + pix.G) / 3;        //Считаем его яркость
+                }
+            mas = (int)(mas / (workingImage.Width * workingImage.Height));
+
+            for (int i = 0; i < workingImage.Width; i++)
+                for (int j = 0; j < workingImage.Height; j++)
+                {
+                    if (lul[i, j] >= mas)
+                        workingImage.SetPixel(i, j, Color.FromArgb(255, 255, 255));
+                    else
+                        workingImage.SetPixel(i, j, Color.FromArgb(0, 0, 0));
+                }
+
+            
+            pictureBox1.Image = (Bitmap)workingImage;
+            pictureBox1.Refresh();
+           
+            result_image = (Bitmap)workingImage.Clone();
+            pictureBox4.Image = result_image;
+            pictureBox4.Refresh();
         }
     }
 }

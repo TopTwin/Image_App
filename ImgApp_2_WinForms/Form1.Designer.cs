@@ -60,6 +60,11 @@ namespace ImgApp_2_WinForms
             this.label1 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.button10 = new System.Windows.Forms.Button();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.button11 = new System.Windows.Forms.Button();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -69,6 +74,8 @@ namespace ImgApp_2_WinForms
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -414,11 +421,70 @@ namespace ImgApp_2_WinForms
             this.pictureBox6.TabStop = false;
             this.pictureBox6.Visible = false;
             // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "Гаврилов",
+            "Отсу",
+            "Ниблек",
+            "Саувола",
+            "Кристиан Вульф",
+            "Брэдли-Рот"});
+            this.comboBox2.Location = new System.Drawing.Point(16, 6);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(108, 21);
+            this.comboBox2.TabIndex = 26;
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(333, 21);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(105, 22);
+            this.button10.TabIndex = 27;
+            this.button10.Text = "Бинаризаця";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
+            // panel3
+            // 
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.button11);
+            this.panel3.Controls.Add(this.comboBox2);
+            this.panel3.Location = new System.Drawing.Point(306, 65);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(132, 80);
+            this.panel3.TabIndex = 8;
+            this.panel3.Visible = false;
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(29, 42);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(76, 22);
+            this.button11.TabIndex = 27;
+            this.button11.Text = "Применить";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            // 
+            // pictureBox7
+            // 
+            this.pictureBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox7.Location = new System.Drawing.Point(356, 325);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(260, 260);
+            this.pictureBox7.TabIndex = 24;
+            this.pictureBox7.TabStop = false;
+            this.pictureBox7.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1100, 686);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.button10);
+            this.Controls.Add(this.pictureBox7);
             this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.button5);
@@ -452,6 +518,8 @@ namespace ImgApp_2_WinForms
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            this.panel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -490,6 +558,11 @@ namespace ImgApp_2_WinForms
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.PictureBox pictureBox7;
     }
 }
 
