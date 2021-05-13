@@ -701,6 +701,7 @@ namespace ImgApp_2_WinForms
             if (panel3.Visible == true)
                 panel3.Visible = false;
             else panel3.Visible = true;
+<<<<<<< Updated upstream
 
             if(comboBox2.SelectedIndex == 1 || 
                comboBox2.SelectedIndex == 2)
@@ -713,6 +714,8 @@ namespace ImgApp_2_WinForms
             {
 
             }
+=======
+>>>>>>> Stashed changes
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -861,6 +864,43 @@ namespace ImgApp_2_WinForms
             result_image = (Bitmap)workingImage.Clone();
             pictureBox4.Image = result_image;
             pictureBox4.Refresh();
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox2.SelectedIndex == 0 ||
+               comboBox2.SelectedIndex == 1)
+            {
+                panel3.Size = new Size(128, 80);
+                comboBox2.Size = new Size(100, 80);
+
+                comboBox2.Location = new Point(14, 6);
+                button11.Location = new Point(25, 40);
+
+                label2.Visible = false;
+                label3.Visible = false;
+                textBox3.Visible = false;
+                textBox4.Visible = false;
+            }
+            else
+            {
+                //Size 195; 154
+                //Location comboBox 43; 10
+                //Location button 59; 118
+                panel3.Size = new Size(195, 154);
+
+                label2.Visible = true;
+                label3.Visible = true;
+                textBox3.Visible = true;
+                textBox4.Visible = true;
+
+                label2.Location = new Point(10, 50);
+                label3.Location = new Point(10, 82);
+                textBox3.Location = new Point(120, 48);
+                textBox4.Location = new Point(120, 78);
+                comboBox2.Location = new Point(43, 10);
+                button11.Location = new Point(59, 118);
+            }
         }
     }
 }

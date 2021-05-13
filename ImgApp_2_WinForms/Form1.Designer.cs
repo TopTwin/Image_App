@@ -65,6 +65,7 @@ namespace ImgApp_2_WinForms
             this.panel3 = new System.Windows.Forms.Panel();
             this.button11 = new System.Windows.Forms.Button();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -431,10 +432,11 @@ namespace ImgApp_2_WinForms
             "Саувола",
             "Кристиан Вульф",
             "Брэдли-Рот"});
-            this.comboBox2.Location = new System.Drawing.Point(16, 6);
+            this.comboBox2.Location = new System.Drawing.Point(58, 9);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(108, 21);
             this.comboBox2.TabIndex = 26;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // button10
             // 
@@ -449,17 +451,18 @@ namespace ImgApp_2_WinForms
             // panel3
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.button11);
             this.panel3.Controls.Add(this.comboBox2);
             this.panel3.Location = new System.Drawing.Point(306, 65);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(132, 80);
+            this.panel3.Size = new System.Drawing.Size(225, 161);
             this.panel3.TabIndex = 8;
             this.panel3.Visible = false;
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(29, 42);
+            this.button11.Location = new System.Drawing.Point(12, 125);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(76, 22);
             this.button11.TabIndex = 27;
@@ -476,6 +479,15 @@ namespace ImgApp_2_WinForms
             this.pictureBox7.TabIndex = 24;
             this.pictureBox7.TabStop = false;
             this.pictureBox7.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(14, 44);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(101, 13);
+            this.label2.TabIndex = 28;
+            this.label2.Text = "Чувствительность";
             // 
             // Form1
             // 
@@ -519,6 +531,7 @@ namespace ImgApp_2_WinForms
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -563,6 +576,7 @@ namespace ImgApp_2_WinForms
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.PictureBox pictureBox7;
+        private System.Windows.Forms.Label label2;
     }
 }
 
