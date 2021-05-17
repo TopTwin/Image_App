@@ -701,7 +701,6 @@ namespace ImgApp_2_WinForms
             if (panel3.Visible == true)
                 panel3.Visible = false;
             else panel3.Visible = true;
-<<<<<<< Updated upstream
 
             if(comboBox2.SelectedIndex == 1 || 
                comboBox2.SelectedIndex == 2)
@@ -714,8 +713,6 @@ namespace ImgApp_2_WinForms
             {
 
             }
-=======
->>>>>>> Stashed changes
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -735,27 +732,44 @@ namespace ImgApp_2_WinForms
                     }
                 case 2:     //Критерий Ниблека
                     {
-
+                        Nublek_Sauvola_Bradly(1);
                         break;
                     }
                 case 3:     //Критерий Сауволы
                     {
-
+                        Nublek_Sauvola_Bradly(2);
                         break;
                     }
                 case 4:     //Критерий Кристиана Вульфа
                     {
-
+                        Nublek_Sauvola_Bradly(2);
                         break;
                     }
                 case 5:     //Критерий Брэдли-Рота
                     {
-
+                        Bradly_Rot();
                         break;
                     }
             }
-                
         }
+        private void Pix(int[,] p)
+        {
+            int w = workingImage.Width;
+            int h = workingImage.Height;
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    var pix1 = workingImage.GetPixel(j, i);
+                    int r1 = pix1.R;
+                    int g1 = pix1.G;
+                    int b1 = pix1.B;
+                    p[j, i] = (r1 + g1 + b1) / 3;
+                }
+            }
+        }
+        #region Binarizacia
+
         private void Otsu()
         {
             int w = workingImage.Width;
@@ -865,7 +879,169 @@ namespace ImgApp_2_WinForms
             pictureBox4.Image = result_image;
             pictureBox4.Refresh();
         }
+        private void Nublek_Sauvola_Bradly(int num)
+        {
+            int a = int.Parse(textBox4.Text); 
+            int del = a * a; 
+            int t = 0; 
+            int min = 256;
+            int w = workingImage.Width;
+            int h = workingImage.Height;
+            int[] tmas = new int[h * w + 1];
+            int[,] pmas = new int[w + 1, h + 1];
+            double D, M2 = 0, maxo = 0; 
+            int k = 0; 
+            double[] M = new double[w * h + 1]; 
+            double[] o = new double[w * h + 1];
+            Pix(pmas);
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    int ia = i - a / 2, ja = j - a / 2, i_a = i + a / 2, j_a = j + a / 2, ja1;
+                    if (ia <= 0) ia = 0;
+                    if (i_a >= h) i_a = h - 1;
+                    if (ja <= 0) ja = 0;
+                    if (j_a >= w) j_a = w - 1;
+                    ja1 = ja;
+                    int count = 0;
+                    while (ia <= i_a)
+                    {
+                        while (ja <= j_a)
+                        {
+                            int p = pmas[ja, ia];
+                            if (ia == i & ja == j) tmas[k] = p;
+                            M[k] += p;
+                            M2 += p * p;
+                            if (p < min) min = p;
+                            count++;
+                            ja++;
+                        }
+                        ia++;
+                        ja = ja1;
+                    }
+                    M[k] /= count; 
+                    M2 /= count;
+                    D = M2 - M[k] * M[k]; 
+                    o[k] = Math.Sqrt(D);
+                    double sensitivity = double.Parse(textBox3.Text);
+                    switch (num)
+                    {
+                        case 1:
+                            {
+                                t = (int)(M[k] + sensitivity * o[k]);
+                                break;
+                            }
+                        case 2:
+                            {
+                                t = (int)(M[k] * (1 + sensitivity * (o[k] / 128 - 1)));
+                                break;
+                            }
 
+                    }
+                    if (o[k] > maxo) maxo = o[k];
+                    if (num != 3)
+                    {
+                        Color pix;
+                        if (tmas[k] <= t)
+                        {
+                            pix = Color.FromArgb(0, 0, 0);
+                        }
+                        else
+                        {
+                            pix = Color.FromArgb(255, 255, 255);
+                        }
+                        workingImage.SetPixel(j, i, pix);
+                    }
+                    k++;
+                }
+            }
+            if (num == 3)
+            {
+                k = 0;
+                for (int i = 0; i < h; i++)
+                {
+                    for (int j = 0; j < w; j++)
+                    {
+                        t = (int)((1 - 0.5) * M[k] + 0.5 * min + 0.5 * o[k] / maxo * (M[k] - min));
+                        Color pix;
+                        if (tmas[k] <= t)
+                        {
+                            pix = Color.FromArgb(0, 0, 0);
+                        }
+                        else
+                        {
+                            pix = Color.FromArgb(255, 255, 255);
+                        }
+                        workingImage.SetPixel(j, i, pix);
+                        k++;
+                    }
+                }
+            }
+            pictureBox1.Image = workingImage;
+            pictureBox1.Refresh();
+
+            result_image = (Bitmap)workingImage.Clone();
+            pictureBox4.Image = result_image;
+            pictureBox4.Refresh();
+            //Grey();
+        }
+        private void Bradly_Rot()
+        {
+            int w = workingImage.Width;
+            int h = workingImage.Height;
+            int[] tmas = new int[h * w + 1];
+            int[,] pmas = new int[w + 1, h + 1]; int[,] S = new int[w + 1, h + 1];
+            Pix(pmas);
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    S[j, i] += pmas[j, i];
+                    if (j != 0 & i != 0) S[j, i] += S[j - 1, i] + S[j, i - 1] - S[j - 1, i - 1];
+                    if (j == 0 & i != 0) S[j, i] += S[j, i - 1];
+                    if (j != 0 & i == 0) S[j, i] += S[j - 1, i];
+                }
+            }
+            int a = int.Parse(textBox4.Text);
+            double k = double.Parse(textBox3.Text);
+            Pix(pmas);
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    int ia = i - a / 2, ja = j - a / 2, i_a = i + a / 2, j_a = j + a / 2; int x1, x2, y1, y2;
+                    if (ia <= 0) ia = 0;
+                    if (i_a >= h) i_a = h - 1;
+                    if (ja <= 0) ja = 0;
+                    if (j_a >= w) j_a = w - 1;
+                    x1 = ja; x2 = j_a; y1 = ia; y2 = i_a;
+                    int Sum = 0;
+                    if (x1 != 0 & y1 != 0) Sum = S[x2, y2] + S[x1 - 1, y1 - 1] - S[x1 - 1, y2] - S[x2, y1 - 1];
+                    if (x1 == 0 & y1 != 0) Sum = S[x2, y2] - S[x2, y1 - 1];
+                    if (x1 != 0 & y1 == 0) Sum = S[x2, y2] - S[x1 - 1, y2];
+
+                    Color pix;
+                    if (pmas[j, i] * a * a < Sum * (1 - k))
+                    {
+                        pix = Color.FromArgb(0, 0, 0);
+                    }
+                    else
+                    {
+                        pix = Color.FromArgb(255, 255, 255);
+                    }
+                    workingImage.SetPixel(j, i, pix);
+                }
+            }
+            pictureBox1.Image = workingImage;
+            pictureBox1.Refresh();
+
+            result_image = (Bitmap)workingImage.Clone();
+            pictureBox4.Image = result_image;
+            pictureBox4.Refresh();
+            //Grey();
+        }
+        #endregion
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox2.SelectedIndex == 0 ||
@@ -887,7 +1063,7 @@ namespace ImgApp_2_WinForms
                 //Size 195; 154
                 //Location comboBox 43; 10
                 //Location button 59; 118
-                panel3.Size = new Size(195, 154);
+                panel3.Size = new Size(223, 161);
 
                 label2.Visible = true;
                 label3.Visible = true;
@@ -899,7 +1075,56 @@ namespace ImgApp_2_WinForms
                 textBox3.Location = new Point(120, 48);
                 textBox4.Location = new Point(120, 78);
                 comboBox2.Location = new Point(43, 10);
-                button11.Location = new Point(59, 118);
+                button11.Location = new Point(12, 125);
+                button12.Location = new Point(120, 125);
+            }
+
+            switch(comboBox2.SelectedIndex)
+            {
+                case 2:
+                    {
+                        textBox3.Text = "-0,2";
+                        textBox4.Text = "20";
+                        break;
+                    }
+                case 3:
+                    {
+                        textBox3.Text = "0,2";
+                        textBox4.Text = "20";
+                        break;
+                    }
+                case 4:
+                    {
+                        label2.Visible = false;
+                        textBox3.Visible = false;
+                        textBox4.Text = "20";
+                        break;
+                    }
+                case 5:
+                    {
+                        textBox3.Text = "0,15";
+                        textBox4.Text = "20";
+                        break;
+                    }
+                default:
+                    {
+                        textBox3.Text = "";
+                        textBox4.Text = "";
+                        break;
+                    }
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+            dataGridView1.Refresh();
+            textBox2.Text = "";
+            if (pictureBox6.Visible == true)
+            {
+                if (pictureBox6.Image != null)
+                    pictureBox6.Image.Dispose();
+                pictureBox6.Image = new Bitmap(pictureBox6.Width, pictureBox6.Height);
             }
         }
     }

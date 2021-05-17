@@ -63,9 +63,13 @@ namespace ImgApp_2_WinForms
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.button10 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.button12 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.button11 = new System.Windows.Forms.Button();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -451,14 +455,60 @@ namespace ImgApp_2_WinForms
             // panel3
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.textBox4);
+            this.panel3.Controls.Add(this.textBox3);
+            this.panel3.Controls.Add(this.label3);
+            this.panel3.Controls.Add(this.button12);
             this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.button11);
             this.panel3.Controls.Add(this.comboBox2);
             this.panel3.Location = new System.Drawing.Point(306, 65);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(225, 161);
+            this.panel3.Size = new System.Drawing.Size(223, 161);
             this.panel3.TabIndex = 8;
             this.panel3.Visible = false;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(135, 74);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(70, 20);
+            this.textBox4.TabIndex = 32;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(135, 44);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(70, 20);
+            this.textBox3.TabIndex = 31;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(19, 74);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(73, 13);
+            this.label3.TabIndex = 30;
+            this.label3.Text = "Размер окна";
+            // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(120, 125);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(85, 22);
+            this.button12.TabIndex = 29;
+            this.button12.Text = "Очистить";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(14, 44);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(101, 13);
+            this.label2.TabIndex = 28;
+            this.label2.Text = "Чувствительность";
             // 
             // button11
             // 
@@ -479,15 +529,6 @@ namespace ImgApp_2_WinForms
             this.pictureBox7.TabIndex = 24;
             this.pictureBox7.TabStop = false;
             this.pictureBox7.Visible = false;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(14, 44);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(101, 13);
-            this.label2.TabIndex = 28;
-            this.label2.Text = "Чувствительность";
             // 
             // Form1
             // 
@@ -577,6 +618,10 @@ namespace ImgApp_2_WinForms
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
 
