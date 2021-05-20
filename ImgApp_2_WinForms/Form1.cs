@@ -226,53 +226,45 @@ namespace ImgApp_2_WinForms
                 List<PictureBox> pb = workingPictures.GetCheckedPictures();
                 Size _size = MaxSizeOfPictures(pb);
 
-                double[,] pixelsR = new double[_size.Width, _size.Height];   
-                double[,] pixelsG = new double[_size.Width, _size.Height];
-                double[,] pixelsB = new double[_size.Width, _size.Height];
-                Color pix = new Color();
-                
+                int[] allBytes = new int[_size.Width * _size.Height * 3];
+
                 for (int k = 0; k < pb.Count; k++)
                 {
                     Bitmap pic = new Bitmap((Bitmap)pb[k].Image, _size);
-                    for(int i = 0; i < _size.Width; i++)
+                    byte[] bytePic = ananas.ByteFromImage(pic);
+                    for (int i = 0; i < _size.Width; i++)
                     {
                         for(int j = 0; j < _size.Height; j++)
                         {
-                            pix = pic.GetPixel(i, j);
-                            pixelsR[i,j] += pix.R;
-                            pixelsG[i,j] += pix.G;
-                            pixelsB[i,j] += pix.B;
+                            allBytes[i * 3 + j * _size.Width * 3] += bytePic[i * 3 + j * _size.Width * 3];
+                            allBytes[i * 3 + 1 + j * _size.Width * 3] += bytePic[i * 3 + 1 + j * _size.Width * 3];
+                            allBytes[i * 3 + 2 + j * _size.Width * 3] += bytePic[i * 3 + 2 + j * _size.Width * 3];
                         }
                     }
                     pic.Dispose();
                 }
-
-                int R = 0;
-                int G = 0;
-                int B = 0;
-
                 if (mainImage != null)
                     mainImage.Dispose();
                 mainImage = new Bitmap(_size.Width, _size.Height);
+
+                byte[] retultBytes = new byte[_size.Width * _size.Height * 3];
                 for (int i = 0; i < _size.Width; i++)       
                 {
                     for (int j = 0; j < _size.Height; j++)
                     {
-                        pixelsR[i, j] /= pb.Count;
-                        pixelsG[i, j] /= pb.Count;
-                        pixelsB[i, j] /= pb.Count;
+                        allBytes[i * 3 + j * _size.Width * 3] /= pb.Count;
+                        allBytes[i * 3 + 1 + j * _size.Width * 3] /= pb.Count;
+                        allBytes[i * 3 + 2 + j * _size.Width * 3] /= pb.Count;
 
                         if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
-                            R = Clamp((int)(pixelsR[i, j]), 0, 255);
+                            retultBytes[i * 3 + 2 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + 2 + j * _size.Width * 3]), 0, 255);
                         if (choice_G)
-                            G = Clamp((int)(pixelsG[i, j]), 0, 255);
+                            retultBytes[i * 3 + 1 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + 1 + j * _size.Width * 3]), 0, 255);
                         if (choice_B)
-                            B = Clamp((int)(pixelsB[i, j]), 0, 255);
-
-                        pix = Color.FromArgb(R, G, B);
-                        mainImage.SetPixel(i, j, pix);
+                            retultBytes[i * 3 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + j * _size.Width * 3]), 0, 255);
                     }
                 }
+                mainImage = ananas.ImageFromByte(retultBytes, _size.Width, _size.Height);
                 SetPictureBox1And4FromMainImage();
             }
         }
@@ -288,49 +280,43 @@ namespace ImgApp_2_WinForms
                 List<PictureBox> pb = workingPictures.GetCheckedPictures();
                 Size _size = MaxSizeOfPictures(pb);
 
-                double[,] pixelsR = new double[_size.Width, _size.Height];
-                double[,] pixelsG = new double[_size.Width, _size.Height];
-                double[,] pixelsB = new double[_size.Width, _size.Height];
-                Color pix = new Color();
-                
+                int[] allBytes = new int[_size.Width * _size.Height * 3];
+
                 for (int k = 0; k < pb.Count; k++)
                 {
                     Bitmap pic = new Bitmap((Bitmap)pb[k].Image.Clone(), _size);
+                    byte[] bytePic = ananas.ByteFromImage(pic);
                     for (int i = 0; i < _size.Width; i++)
                     {
                         for (int j = 0; j < _size.Height; j++)
                         {
-                            pix = pic.GetPixel(i, j);
-                            pixelsR[i, j] += pix.R;
-                            pixelsG[i, j] += pix.G;
-                            pixelsB[i, j] += pix.B;
+                            allBytes[i * 3 + j * _size.Width * 3] += bytePic[i * 3 + j * _size.Width * 3];
+                            allBytes[i * 3 + 1 + j * _size.Width * 3] += bytePic[i * 3 + 1 + j * _size.Width * 3];
+                            allBytes[i * 3 + 2 + j * _size.Width * 3] += bytePic[i * 3 + 2 + j * _size.Width * 3];
                         }
                     }
                     pic.Dispose();
                 }
                 
-                int R = 0;
-                int G = 0;
-                int B = 0;
-                
                 if (mainImage != null)
                     mainImage.Dispose();
                 mainImage = new Bitmap(_size.Width, _size.Height);
+
+                byte[] retultBytes = new byte[_size.Width * _size.Height * 3];
+
                 for (int i = 0; i < _size.Width; i++)
                 {
                     for (int j = 0; j < _size.Height; j++)
                     {
                         if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
-                            R = Clamp((int)(pixelsR[i, j]), 0, 255);
+                            retultBytes[i * 3 + 2 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + 2 + j * _size.Width * 3]), 0, 255);
                         if (choice_G)
-                            G = Clamp((int)(pixelsG[i, j]), 0, 255);
+                            retultBytes[i * 3 + 1 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + 1 + j * _size.Width * 3]), 0, 255);
                         if (choice_B)
-                            B = Clamp((int)(pixelsB[i, j]), 0, 255);
-
-                        pix = Color.FromArgb(R, G, B);
-                        mainImage.SetPixel(i, j, pix);
+                            retultBytes[i * 3 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + j * _size.Width * 3]), 0, 255);
                     }
                 }
+                mainImage = ananas.ImageFromByte(retultBytes, _size.Width, _size.Height);
                 SetPictureBox1And4FromMainImage();
             }
         }
@@ -349,27 +335,28 @@ namespace ImgApp_2_WinForms
                     );
                 return;
             }
-            for (int i = 0; i < mainImage.Height; i++)      //цикл перебора пикселей
-            {
-                for (int j = 0; j < mainImage.Width; j++)
-                {
-                    var pix1 = mainImage.GetPixel(j, i);        //получаем пиксили картинок
 
-                    int R = 0;
-                    int G = 0;
-                    int B = 0;
+            byte[] retultBytes = ananas.ByteFromImage(mainImage);
+
+            for (int i = 0; i < mainImage.Width; i++)      //цикл перебора пикселей
+            {
+                for (int j = 0; j < mainImage.Height; j++)
+                {
+                    double lul1 = koef * (retultBytes[i * 3 + 2 + j * mainImage.Width * 3]);
+                    double lul2 = koef * (retultBytes[i * 3 + 1 + j * mainImage.Width * 3]);
+                    double lul3 = koef * (retultBytes[i * 3 + j * mainImage.Width * 3]);
+
 
                     if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
-                        R = Clamp((int)(pix1.R * koef), 0, 255);
+                        retultBytes[i * 3 + 2 + j * mainImage.Width * 3] = (byte)Clamp(lul1, 0, 255);
                     if (choice_G)
-                        G = Clamp((int)(pix1.G * koef), 0, 255);
+                        retultBytes[i * 3 + 1 + j * mainImage.Width * 3] = (byte)Clamp(lul2, 0, 255);
                     if (choice_B)
-                        B = Clamp((int)(pix1.B * koef), 0, 255);
+                        retultBytes[i * 3 + j * mainImage.Width * 3] = (byte)Clamp(lul3, 0, 255);
 
-                    pix1 = Color.FromArgb(R, G, B);
-                    mainImage.SetPixel(j, i, pix1);
                 }
             }
+            mainImage = ananas.ImageFromByte(retultBytes, mainImage.Width, mainImage.Height);
             SetPictureBox1And4FromMainImage();
         }
         private void MaxPix()
@@ -384,63 +371,44 @@ namespace ImgApp_2_WinForms
                 List<PictureBox> pb = workingPictures.GetCheckedPictures();
                 Size _size = MaxSizeOfPictures(pb);
 
-                double[,] pixelsR = new double[_size.Width, _size.Height];
-                double[,] pixelsG = new double[_size.Width, _size.Height];
-                double[,] pixelsB = new double[_size.Width, _size.Height];
-                Color pix = new Color();
-
+                byte[] resultBytes = new byte[_size.Width * _size.Height * 3];
+                
                 for (int k = 0; k < pb.Count; k++)
                 {
                     Bitmap pic = new Bitmap((Bitmap)pb[k].Image.Clone(), _size);
+                    byte[] bytePic = ananas.ByteFromImage(pic);
                     for (int i = 0; i < _size.Width; i++)
                     {
                         for (int j = 0; j < _size.Height; j++)
                         {
-                            pix = pic.GetPixel(i, j);
                             if (k == 0)
                             {
-                                pixelsR[i, j] = pix.R;
-                                pixelsG[i, j] = pix.G;
-                                pixelsB[i, j] = pix.B;
+                                resultBytes[i * 3 + 2 + j * _size.Width * 3] = bytePic[i * 3 + 2 + j * _size.Width * 3];
+                                resultBytes[i * 3 + 1 + j * _size.Width * 3] = bytePic[i * 3 + 1 + j * _size.Width * 3];
+                                resultBytes[i * 3 + j * _size.Width * 3] = bytePic[i * 3 + j * _size.Width * 3];
                             }
                             else
                             {
-                                if (pixelsR[i, j] < pix.R)
-                                    pixelsR[i, j] = pix.R;
+                                int abc = resultBytes[i * 3 + 2 + j * _size.Width * 3] +
+                                          resultBytes[i * 3 + 1 + j * _size.Width * 3] +
+                                          resultBytes[i * 3 + j * _size.Width * 3];
+                                int abc2 = bytePic[i * 3 + 2 + j * _size.Width * 3] +
+                                           bytePic[i * 3 + 1 + j * _size.Width * 3] +
+                                           bytePic[i * 3 + j * _size.Width * 3];
 
-                                if (pixelsG[i, j] < pix.G)
-                                    pixelsG[i, j] = pix.G;
-
-                                if (pixelsB[i, j] < pix.B)
-                                    pixelsB[i, j] = pix.B;
+                                if (abc < abc2)
+                                {
+                                    resultBytes[i * 3 + 2 + j * _size.Width * 3] = bytePic[i * 3 + 2 + j * _size.Width * 3];
+                                    resultBytes[i * 3 + 1 + j * _size.Width * 3] = bytePic[i * 3 + 1 + j * _size.Width * 3];
+                                    resultBytes[i * 3 + j * _size.Width * 3] = bytePic[i * 3 + j * _size.Width * 3];
+                                }
                             }
                         }
                     }
                     pic.Dispose();
                 }
 
-                int R = 0;
-                int G = 0;
-                int B = 0;
-
-                if (mainImage != null)
-                    mainImage.Dispose();
-                mainImage = new Bitmap(_size.Width, _size.Height);
-                for (int i = 0; i < _size.Width; i++)
-                {
-                    for (int j = 0; j < _size.Height; j++)
-                    {
-                        if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
-                            R = Clamp((int)(pixelsR[i, j]), 0, 255);
-                        if (choice_G)
-                            G = Clamp((int)(pixelsG[i, j]), 0, 255);
-                        if (choice_B)
-                            B = Clamp((int)(pixelsB[i, j]), 0, 255);
-
-                        pix = Color.FromArgb(R, G, B);
-                        mainImage.SetPixel(i, j, pix);
-                    }
-                }
+                mainImage = ananas.ImageFromByte(resultBytes, _size.Width, _size.Height);
                 SetPictureBox1And4FromMainImage();
             }
         }
@@ -456,61 +424,44 @@ namespace ImgApp_2_WinForms
                 List<PictureBox> pb = workingPictures.GetCheckedPictures();
                 Size _size = MaxSizeOfPictures(pb);
 
-                double[,] pixelsR = new double[_size.Width, _size.Height];
-                double[,] pixelsG = new double[_size.Width, _size.Height];
-                double[,] pixelsB = new double[_size.Width, _size.Height];
-                Color pix = new Color();
+                byte[] resultBytes = new byte[_size.Width * _size.Height * 3];
 
                 for (int k = 0; k < pb.Count; k++)
                 {
                     Bitmap pic = new Bitmap((Bitmap)pb[k].Image.Clone(), _size);
+                    byte[] bytePic = ananas.ByteFromImage(pic);
                     for (int i = 0; i < _size.Width; i++)
                     {
                         for (int j = 0; j < _size.Height; j++)
                         {
-                            pix = pic.GetPixel(i, j);
                             if (k == 0)
                             {
-                                pixelsR[i, j] = pix.R;
-                                pixelsG[i, j] = pix.G;
-                                pixelsB[i, j] = pix.B;
+                                resultBytes[i * 3 + 2 + j * _size.Width * 3] = bytePic[i * 3 + 2 + j * _size.Width * 3];
+                                resultBytes[i * 3 + 1 + j * _size.Width * 3] = bytePic[i * 3 + 1 + j * _size.Width * 3];
+                                resultBytes[i * 3 + j * _size.Width * 3] = bytePic[i * 3 + j * _size.Width * 3];
                             }
                             else
                             {
-                                if (pixelsR[i, j] > pix.R)
-                                    pixelsR[i, j] = pix.R;
-                                if (pixelsG[i, j] > pix.G)
-                                    pixelsG[i, j] = pix.G;
-                                if (pixelsB[i, j] > pix.B)
-                                    pixelsB[i, j] = pix.B;
+                                int abc = resultBytes[i * 3 + 2 + j * _size.Width * 3] +
+                                          resultBytes[i * 3 + 1 + j * _size.Width * 3] +
+                                          resultBytes[i * 3 + j * _size.Width * 3];
+                                int abc2 = bytePic[i * 3 + 2 + j * _size.Width * 3] +
+                                           bytePic[i * 3 + 1 + j * _size.Width * 3] +
+                                           bytePic[i * 3 + j * _size.Width * 3];
+                                
+                                if(abc > abc2)
+                                {
+                                    resultBytes[i * 3 + 2 + j * _size.Width * 3] = bytePic[i * 3 + 2 + j * _size.Width * 3];
+                                    resultBytes[i * 3 + 1 + j * _size.Width * 3] = bytePic[i * 3 + 1 + j * _size.Width * 3];
+                                    resultBytes[i * 3 + j * _size.Width * 3] = bytePic[i * 3 + j * _size.Width * 3];
+                                }
                             }
                         }
                     }
                     pic.Dispose();
                 }
 
-                int R = 0;
-                int G = 0;
-                int B = 0;
-
-                if (mainImage != null)
-                    mainImage.Dispose();
-                mainImage = new Bitmap(_size.Width, _size.Height);
-                for (int i = 0; i < _size.Width; i++)
-                {
-                    for (int j = 0; j < _size.Height; j++)
-                    {
-                        if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
-                            R = Clamp((int)(pixelsR[i, j]), 0, 255);
-                        if (choice_G)
-                            G = Clamp((int)(pixelsG[i, j]), 0, 255);
-                        if (choice_B)
-                            B = Clamp((int)(pixelsB[i, j]), 0, 255);
-
-                        pix = Color.FromArgb(R, G, B);
-                        mainImage.SetPixel(i, j, pix);
-                    }
-                }
+                mainImage = ananas.ImageFromByte(resultBytes, _size.Width, _size.Height);
                 SetPictureBox1And4FromMainImage();
             }
         }
@@ -554,15 +505,17 @@ namespace ImgApp_2_WinForms
                 pictureBox5.Image.Dispose();
 
             pictureBox5.Image = new Bitmap(pictureBox5.Width, pictureBox5.Height);
-
+            byte[] picBytes = ananas.ByteFromImage(mainImage);
             int[] N = new int[256];
             for (int i = 0; i < mainImage.Width; i++)      //цикл перебора пикселей
             {
                 for (int j = 0; j < mainImage.Height; j++)
                 {
-                    var pix1 = mainImage.GetPixel(i, j);        //получаем пиксили картинок
-
-                    var c = (pix1.R + pix1.B + pix1.G) / 3;
+                    //получаем пиксили картинок
+                    var c = (picBytes[i * 3 + 2 + j * mainImage.Width * 3] +
+                             picBytes[i * 3 + 1 + j * mainImage.Width * 3] +
+                             picBytes[i * 3 + j * mainImage.Width * 3])
+                             / 3;
                     N[c]++;
                 }
             }
@@ -579,7 +532,6 @@ namespace ImgApp_2_WinForms
                 b[0] = i; b[1] = pictureBox5.Height - 1 - N[i] * k;
                 grap.DrawLine(pp, a[0], a[1], b[0], b[1]);
             }
-
             grap.Dispose();
             pp.Dispose();
         }
@@ -821,20 +773,20 @@ namespace ImgApp_2_WinForms
             int all_pixel_count = w * h;
             int all_intensity_sum = 0; int k = 0;
             int[] tmas = new int[w * h + 1];
-            for (int i = 0; i < h; ++i)
+            byte[] bytePic = ananas.ByteFromImage(mainImage);
+            for (int i = 0; i < w; ++i)
             {
-                for (int j = 0; j < w; ++j)
+                for (int j = 0; j < h; ++j)
                 {
-                    var pix1 = mainImage.GetPixel(j, i);
-                    int r1 = pix1.R;
-                    int g1 = pix1.G;
-                    int b1 = pix1.B;
+                    //var pix1 = mainImage.GetPixel(j, i);
+                    int r1 = bytePic[i * 3 + 2 + j * w * 3];
+                    int g1 = bytePic[i * 3 + 1 + j * w * 3];
+                    int b1 = bytePic[i * 3 + j * w * 3];
                     all_intensity_sum += (r1 + g1 + b1) / 3;
                     tmas[k] = (r1 + g1 + b1) / 3; k++;
                     N[(r1 + g1 + b1) / 3]++;
                 }
             }
-
 
             int best_thresh = 0;
             double best_sigma = 0.0;
@@ -867,23 +819,26 @@ namespace ImgApp_2_WinForms
                 }
             }
             k = 0;
-            for (int i = 0; i < h; i++)
+            for (int i = 0; i < w; i++)
             {
-                for (int j = 0; j < w; j++)
+                for (int j = 0; j < h; j++)
                 {
-                    Color pix;
                     if (tmas[k] <= best_thresh)
                     {
-                        pix = Color.FromArgb(0, 0, 0);
+                        bytePic[i * 3 + 2 + j * w * 3] = 0;
+                        bytePic[i * 3 + 1 + j * w * 3] = 0;
+                        bytePic[i * 3 + j * w * 3] = 0;
                     }
                     else
                     {
-                        pix = Color.FromArgb(255, 255, 255);
+                        bytePic[i * 3 + 2 + j * w * 3] = 255;
+                        bytePic[i * 3 + 1 + j * w * 3] = 255;
+                        bytePic[i * 3 + j * w * 3] = 255;
                     }
-                    mainImage.SetPixel(j, i, pix); k++;
+                    k++;
                 }
             }
-
+            mainImage = ananas.ImageFromByte(bytePic, w, h);
             pictureBox1.Image = mainImage;
             pictureBox1.Refresh();
 
@@ -893,27 +848,42 @@ namespace ImgApp_2_WinForms
         }
         private void Gavrilov()
         {
+            int w = mainImage.Width;
+            int h = mainImage.Height;
             double mas = new double();
-            double[,] lul = new double[mainImage.Width, mainImage.Height];
-
-            for (int i = 0; i < mainImage.Width; i++)
-                for (int j = 0; j < mainImage.Height; j++)
+            double[,] lul = new double[w, h];
+            byte[] bytePic = ananas.ByteFromImage(mainImage);
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
                 {
-                    var pix = mainImage.GetPixel(i, j);      //Считываем пиксель
-                    lul[i, j] = (pix.R + pix.B + pix.G) / 3;
-                    mas += (pix.R + pix.B + pix.G) / 3;        //Считаем его яркость
+                    int r1 = bytePic[i * 3 + 2 + j * w * 3];
+                    int g1 = bytePic[i * 3 + 1 + j * w * 3];
+                    int b1 = bytePic[i * 3 + j * w * 3];
+                    
+                    lul[i, j] = (r1 + g1 + b1) / 3;
+                    mas += (r1 + g1 + b1) / 3;        //Считаем его яркость
                 }
-            mas = (int)(mas / (mainImage.Width * mainImage.Height));
+            mas = (int)(mas / (w * h));
 
-            for (int i = 0; i < mainImage.Width; i++)
-                for (int j = 0; j < mainImage.Height; j++)
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
                 {
                     if (lul[i, j] >= mas)
-                        mainImage.SetPixel(i, j, Color.FromArgb(255, 255, 255));
+                    {
+                        bytePic[i * 3 + 2 + j * w * 3] = 255;
+                        bytePic[i * 3 + 1 + j * w * 3] = 255;
+                        bytePic[i * 3 + j * w * 3] = 255;
+                    }
+                        //mainImage.SetPixel(i, j, Color.FromArgb(255, 255, 255));
                     else
-                        mainImage.SetPixel(i, j, Color.FromArgb(0, 0, 0));
+                    {
+                        bytePic[i * 3 + 2 + j * w * 3] = 0;
+                        bytePic[i * 3 + 1 + j * w * 3] = 0;
+                        bytePic[i * 3 + j * w * 3] = 0;
+                    }
+                        //mainImage.SetPixel(i, j, Color.FromArgb(0, 0, 0));
                 }
-
+            mainImage = ananas.ImageFromByte(bytePic, w, h);
             pictureBox1.Image = (Bitmap)mainImage;
             pictureBox1.Refresh();
 

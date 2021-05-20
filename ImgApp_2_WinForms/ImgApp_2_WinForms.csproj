@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ByteImage.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,6 +67,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LineInterpolate.cs" />
+    <Compile Include="SpatialFiltering.cs" />
     <Compile Include="WorkingPictures.cs" />
     <Compile Include="на чем рисую кривую.cs">
       <SubType>Component</SubType>
