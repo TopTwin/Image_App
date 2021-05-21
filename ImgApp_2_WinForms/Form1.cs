@@ -763,7 +763,6 @@ namespace ImgApp_2_WinForms
                         break;
                     }
             }
-
         }
         private void Otsu()
         {
