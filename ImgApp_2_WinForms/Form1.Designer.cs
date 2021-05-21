@@ -70,6 +70,15 @@ namespace ImgApp_2_WinForms
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.button12 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.button15 = new System.Windows.Forms.Button();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.panel1.SuspendLayout();
@@ -79,6 +88,7 @@ namespace ImgApp_2_WinForms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel5.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -344,7 +354,7 @@ namespace ImgApp_2_WinForms
             this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.button11);
             this.panel3.Controls.Add(this.comboBox2);
-            this.panel3.Location = new System.Drawing.Point(154, 589);
+            this.panel3.Location = new System.Drawing.Point(154, 536);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(206, 163);
             this.panel3.TabIndex = 8;
@@ -415,7 +425,7 @@ namespace ImgApp_2_WinForms
             this.panel5.Controls.Add(this.radioButton3);
             this.panel5.Controls.Add(this.radioButton2);
             this.panel5.Controls.Add(this.radioButton1);
-            this.panel5.Location = new System.Drawing.Point(25, 589);
+            this.panel5.Location = new System.Drawing.Point(26, 580);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(123, 110);
             this.panel5.TabIndex = 30;
@@ -532,11 +542,96 @@ namespace ImgApp_2_WinForms
             this.button13.Text = "Удалить картинку";
             this.button13.UseVisualStyleBackColor = true;
             // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(449, 21);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(178, 22);
+            this.button14.TabIndex = 33;
+            this.button14.Text = "Пространственная  фильтрация";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
+            // panel6
+            // 
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel6.Controls.Add(this.textBox7);
+            this.panel6.Controls.Add(this.label6);
+            this.panel6.Controls.Add(this.textBox5);
+            this.panel6.Controls.Add(this.textBox6);
+            this.panel6.Controls.Add(this.label4);
+            this.panel6.Controls.Add(this.label5);
+            this.panel6.Controls.Add(this.button15);
+            this.panel6.Location = new System.Drawing.Point(366, 563);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(206, 136);
+            this.panel6.TabIndex = 34;
+            this.panel6.Visible = false;
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(120, 51);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(70, 20);
+            this.textBox5.TabIndex = 31;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(120, 21);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(70, 20);
+            this.textBox6.TabIndex = 30;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 24);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(39, 13);
+            this.label4.TabIndex = 29;
+            this.label4.Text = "Сигма";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(3, 54);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(104, 13);
+            this.label5.TabIndex = 28;
+            this.label5.Text = "Отступ лево/право";
+            // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(60, 104);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(76, 22);
+            this.button15.TabIndex = 27;
+            this.button15.Text = "Применить";
+            this.button15.UseVisualStyleBackColor = true;
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(120, 78);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(70, 20);
+            this.textBox7.TabIndex = 33;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(3, 81);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(97, 13);
+            this.label6.TabIndex = 32;
+            this.label6.Text = "Отступ вверх/низ";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1115, 690);
+            this.Controls.Add(this.panel6);
+            this.Controls.Add(this.button14);
             this.Controls.Add(this.button13);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.button12);
@@ -569,6 +664,8 @@ namespace ImgApp_2_WinForms
             this.panel3.PerformLayout();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -617,6 +714,15 @@ namespace ImgApp_2_WinForms
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button15;
     }
 }
 

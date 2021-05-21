@@ -10,18 +10,18 @@ namespace ImgApp_2_WinForms
     class SpatialFiltering: IDisposable
     {
         int w, h;       //размеры прямоугольника
-        int r1, r2;     //Расстояния до края от центра
-        Bitmap bitmap;
-        byte[] bytesPic;
+        int r1, r2;     //r1 - width, r2 - height
+        Bitmap picture;
+        Bitmap resultPic;
         double[,] matrix;
 
         public SpatialFiltering()
         {
             w = 0;  h = 0;
             r1 = 0; r2 = 0;
-            bitmap = null;
+            picture = null;
             matrix = new double[0,0];
-            bytesPic = new byte[0];
+            resultPic = null;
         }
 
         public SpatialFiltering(Bitmap bit, int _w, int _h, double[,] mat)
@@ -30,9 +30,9 @@ namespace ImgApp_2_WinForms
             h = _h;
             r1 = (w - 1) / 2;
             r2 = (h - 1) / 2;
-            bitmap = bit;
-            bytesPic = ananas.ByteFromImage(bitmap);
+            picture = bit;
             matrix = mat;
+            resultPic = null;
         }
         ~SpatialFiltering()
         {
@@ -41,10 +41,9 @@ namespace ImgApp_2_WinForms
 
         public void SetPicture(Bitmap _bit)     //устанавливает картинку
         {
-            if (bitmap != null)
-                bitmap.Dispose();
-            bitmap = _bit;
-            bytesPic = ananas.ByteFromImage(bitmap);
+            if (picture != null)
+                picture.Dispose();
+            picture = _bit;
         }
         public void SetMatrix(int _w, int _h, double[,] mat)    //устанавливает матрицу и ее размеры
         {
@@ -59,28 +58,168 @@ namespace ImgApp_2_WinForms
             if (!CheckMatrix())     
                 return null;
 
-            int width = bitmap.Width;
-            int height = bitmap.Height;
-
-            for(int i = 0; i <= width; i++)         //Цикл прохода по картинке
+            int width = picture.Width;
+            int height = picture.Height;
+            byte[] bytesPic = new byte[picture.Width * picture.Height * 3];
+            for (int i = 0; i < width; i++)         //Цикл прохода по картинке
                 for(int j = 0; j < height; j++)
                 {
-                    byte[] pix;                     //Создаем массив для нового значения пикселя        
-                    //PixProcessing(i, j,out pix);    //Обрабатываем пиксель и получаем новое значение
+                    byte[] pix = PixProcessing(i, j, bytesPic);    //Обрабатываем пиксель и получаем новое значение
+                    //pix[0] - R, pix[1] - G, pix[2] - B
+                    bytesPic[i * 3 + j * 3 + 2] = pix[0];
+                    bytesPic[i * 3 + j * 3 + 1] = pix[1];
+                    bytesPic[i * 3 + j * 3] = pix[2];
                 }
-            return bitmap;
+            resultPic = ananas.ImageFromByte(bytesPic, picture.Width, picture.Height);
+            return resultPic;
         }
-       //void PixProcessing(int x, int y, out byte[] pix)
-       //{
-       //    // BGR
-       //
-       //    for(int i = 0; i < w; i++)
-       //        for (int j = 0; j < h; j++)
-       //        {
-       //            if(i + x - r1 < 0)
-       //
-       //        }
-       //}
+        byte[] PixProcessing(int x, int y, byte[] bytesPic)
+        {
+            //х,у - координаты пикселя
+            //i,j - координаты в матрице
+            int[] pix = new int[3];
+            //pix[0] - R
+            //pix[1] - G
+            //pix[2] - B
+            double buf = 0;     //для хранения промежуточного результата
+            for(int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
+                {
+                    //верхний левый угол
+                    if ((i + y - r2) < 0 && (j + x - r1) < 0)   
+                    {
+                        int newX = x + (r1 - j);
+                        int newY = y + (r2 - i);
+                        buf = bytesPic[newX * 3 + newY * 3 + 2] * matrix[i, j];
+                        pix[0] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3 + 1] * matrix[i, j];
+                        pix[1] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3] * matrix[i, j];
+                        pix[2] += (int)buf;
+                        continue;
+                    }
+                    //верхний правый угол
+                    if ((i + y - r2) < 0 && (x + j - r1) >= picture.Width)
+                    {
+                        int newX = x - (j - r1);
+                        int newY = y + (r2 - i);
+                        buf = bytesPic[newX * 3 + newY * 3 + 2] * matrix[i, j];
+                        pix[0] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3 + 1] * matrix[i, j];
+                        pix[1] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3] * matrix[i, j];
+                        pix[2] += (int)buf;
+                        continue;
+                    }
+                    //нижний правый угол
+                    if ((i + y - r2) >= picture.Height && (x + j - r1) >= picture.Width)
+                    {
+                        int newX = x - (j - r1);
+                        int newY = y - (i - r2);
+                        buf = bytesPic[newX * 3 + newY * 3 + 2] * matrix[i, j];
+                        pix[0] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3 + 1] * matrix[i, j];
+                        pix[1] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3] * matrix[i, j];
+                        pix[2] += (int)buf;
+                        continue;
+                    }
+                    //нижний левый угол
+                    if ((i + y - r2) >= picture.Height && (j + x - r1) < 0)
+                    {
+                        int newX = x + (r1 - j);
+                        int newY = y - (i - r2);
+                        buf = bytesPic[newX * 3 + newY * 3 + 2] * matrix[i, j];
+                        pix[0] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3 + 1] * matrix[i, j];
+                        pix[1] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3] * matrix[i, j];
+                        pix[2] += (int)buf;
+                        continue;
+                    }
+                    //верхняя сторона
+                    if ((i + y - r2) < 0)       
+                    {
+                        int newY = y + (r2 - i);
+                        int newX = x + j - r1;
+                        buf = bytesPic[newX * 3 + newY * 3 + 2] * matrix[i, j];
+                        pix[0] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3 + 1] * matrix[i, j];
+                        pix[1] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3] * matrix[i, j];
+                        pix[2] += (int)buf;
+                        continue;
+                    }
+                    //левая сторона
+                    if ((j + x - r1) < 0)
+                    {
+                        int newX = x + (r1 - j);
+                        int newY = y + i - r2;
+                        buf = bytesPic[newX * 3 + newY * 3 + 2] * matrix[i, j];
+                        pix[0] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3 + 1] * matrix[i, j];
+                        pix[1] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3] * matrix[i, j];
+                        pix[2] += (int)buf;
+                        continue;
+                    }
+                    //правая сторона
+                    if ((x + j - r1) >= picture.Width)
+                    {
+                        int newX = x - (j - r1);
+                        int newY = y + i - r2;
+                        buf = bytesPic[newX * 3 + newY * 3 + 2] * matrix[i, j];
+                        pix[0] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3 + 1] * matrix[i, j];
+                        pix[1] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3] * matrix[i, j];
+                        pix[2] += (int)buf;
+                        continue;
+                    }
+                    //нижняя сторона
+                    if ((i + y - r2) >= picture.Height)
+                    {
+                        int newY = y - (i - r2);
+                        int newX = x + j - r1;
+                        buf = bytesPic[newX * 3 + newY * 3 + 2] * matrix[i, j];
+                        pix[0] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3 + 1] * matrix[i, j];
+                        pix[1] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3] * matrix[i, j];
+                        pix[2] += (int)buf;
+                        continue;
+                    }
+                    //центр
+                    if( i + y - r2  >= 0             &&
+                        i + y - r2  < picture.Height  &&
+                        j + x - r1  >= 0             &&
+                        j + x - r1  < picture.Height)
+                    {
+                        int newY = y + i - r2;
+                        int newX = x + j - r1;
+                        buf = bytesPic[newX * 3 + newY * 3 + 2] * matrix[i, j];
+                        pix[0] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3 + 1] * matrix[i, j];
+                        pix[1] += (int)buf;
+                        buf = bytesPic[newX * 3 + newY * 3] * matrix[i, j];
+                        pix[2] += (int)buf;
+                        continue;
+                    }
+                }
+            byte[] tt = new byte[3];
+
+            if (pix[0] > 255)   tt[0] = 255;
+            else                tt[0] = (byte)pix[0];
+
+            if (pix[1] > 255)   tt[1] = 255;
+            else                tt[1] = (byte)pix[1];
+
+            if (pix[2] > 255)   tt[2] = 255;
+            else                tt[2] = (byte)pix[2];
+
+            return tt;
+
+        }
         bool CheckMatrix()
         {
             if (w * h == matrix.Length)
@@ -93,7 +232,8 @@ namespace ImgApp_2_WinForms
             w = 0; h = 0;
             r1 = 0; r2 = 0;
             matrix = new double[0,0];
-            bitmap.Dispose();
+            picture.Dispose();
+            resultPic.Dispose();
         }
     }
 }

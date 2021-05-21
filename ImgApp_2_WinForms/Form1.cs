@@ -53,8 +53,10 @@ namespace ImgApp_2_WinForms
             panel2.Location = new Point(289, 65);
             //25; 65
             panel1.Location = new Point(25, 65);
+            //449; 62
+            panel6.Location = new Point(449, 66);
         }
-        
+
         private void Open_Click(object sender, EventArgs e)
         {
             using OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -1236,5 +1238,12 @@ namespace ImgApp_2_WinForms
             }
         }
 
+        private void button14_Click(object sender, EventArgs e)
+        {
+            if (panel6.Visible == false)
+                panel6.Visible = true;
+            else
+                panel6.Visible = false;
+        }
     }
 }
