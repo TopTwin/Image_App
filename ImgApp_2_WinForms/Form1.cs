@@ -744,22 +744,22 @@ namespace ImgApp_2_WinForms
                     }
                 case 2:     //Критерий Ниблека
                     {
-
+                        Nublek_Sauvola_Bradly(1);
                         break;
                     }
                 case 3:     //Критерий Сауволы
                     {
-
+                        Nublek_Sauvola_Bradly(2);
                         break;
                     }
                 case 4:     //Критерий Кристиана Вульфа
                     {
-
+                        Nublek_Sauvola_Bradly(2);
                         break;
                     }
                 case 5:     //Критерий Брэдли-Рота
                     {
-
+                        Bradly_Rot();
                         break;
                     }
             }
