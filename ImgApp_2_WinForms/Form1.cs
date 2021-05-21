@@ -898,6 +898,201 @@ namespace ImgApp_2_WinForms
             else panel5.Visible = false;
         }
 
+        private void Nublek_Sauvola_Bradly(int num)
+        {
+            int a = int.Parse(textBox4.Text);
+            int del = a * a;
+            int t = 0;
+            int min = 256;
+            int w = mainImage.Width;
+            int h = mainImage.Height;
+            int[] tmas = new int[h * w + 1];
+            int[,] pmas = new int[w + 1, h + 1];
+            double D, M2 = 0, maxo = 0;
+            int k = 0;
+            double[] M = new double[w * h + 1];
+            double[] o = new double[w * h + 1];
+            //Pix(pmas);
+            byte[] bytePic = ananas.ByteFromImage(mainImage);
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
+                {
+                    int r1 = bytePic[i * 3 + 2 + j * w * 3];
+                    int g1 = bytePic[i * 3 + 1 + j * w * 3];
+                    int b1 = bytePic[i * 3 + j * w * 3];
+
+                    pmas[i, j] = (r1 + g1 + b1) / 3;
+                }
+
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    int ia = i - a / 2, ja = j - a / 2, i_a = i + a / 2, j_a = j + a / 2, ja1;
+                    if (ia <= 0) ia = 0;
+                    if (i_a >= h) i_a = h - 1;
+                    if (ja <= 0) ja = 0;
+                    if (j_a >= w) j_a = w - 1;
+                    ja1 = ja;
+                    int count = 0;
+                    while (ia <= i_a)
+                    {
+                        while (ja <= j_a)
+                        {
+                            int p = pmas[ja, ia];
+                            if (ia == i & ja == j) tmas[k] = p;
+                            M[k] += p;
+                            M2 += p * p;
+                            if (p < min) min = p;
+                            count++;
+                            ja++;
+                        }
+                        ia++;
+                        ja = ja1;
+                    }
+                    M[k] /= count;
+                    M2 /= count;
+                    D = M2 - M[k] * M[k];
+                    o[k] = Math.Sqrt(D);
+                    double sensitivity = double.Parse(textBox3.Text);
+                    switch (num)
+                    {
+                        case 1:
+                            {
+                                t = (int)(M[k] + sensitivity * o[k]);
+                                break;
+                            }
+                        case 2:
+                            {
+                                t = (int)(M[k] * (1 + sensitivity * (o[k] / 128 - 1)));
+                                break;
+                            }
+
+                    }
+                    if (o[k] > maxo) maxo = o[k];
+                    if (num != 3)
+                    {
+                        if (tmas[k] <= t)
+                        {
+                            bytePic[i * 3 + 2 + j * w * 3] = 0;
+                            bytePic[i * 3 + 1 + j * w * 3] = 0;
+                            bytePic[i * 3 + j * w * 3] = 0;
+                        }
+                        else
+                        {
+                            bytePic[i * 3 + 2 + j * w * 3] = 255;
+                            bytePic[i * 3 + 1 + j * w * 3] = 255;
+                            bytePic[i * 3 + j * w * 3] = 255;
+                        }
+                    }
+                    k++;
+                }
+            }
+            if (num == 3)
+            {
+                k = 0;
+                for (int i = 0; i < h; i++)
+                {
+                    for (int j = 0; j < w; j++)
+                    {
+                        t = (int)((1 - 0.5) * M[k] + 0.5 * min + 0.5 * o[k] / maxo * (M[k] - min));
+                        //Color pix;
+                        if (tmas[k] <= t)
+                        {
+                            bytePic[i * 3 + 2 + j * w * 3] = 0;
+                            bytePic[i * 3 + 1 + j * w * 3] = 0;
+                            bytePic[i * 3 + j * w * 3] = 0;
+                        }
+                        else
+                        {
+                            bytePic[i * 3 + 2 + j * w * 3] = 255;
+                            bytePic[i * 3 + 1 + j * w * 3] = 255;
+                            bytePic[i * 3 + j * w * 3] = 255;
+                        }
+                       //workingImage.SetPixel(j, i, pix);
+                        k++;
+                    }
+                }
+            }
+            pictureBox1.Image = mainImage;
+            pictureBox1.Refresh();
+
+            result_image = (Bitmap)mainImage.Clone();
+            pictureBox4.Image = result_image;
+            pictureBox4.Refresh();
+            //Grey();
+        }
+        private void Bradly_Rot()
+        {
+            int w = mainImage.Width;
+            int h = mainImage.Height;
+            int[] tmas = new int[h * w + 1];
+            int[,] pmas = new int[w + 1, h + 1]; int[,] S = new int[w + 1, h + 1];
+            //Pix(pmas);
+            byte[] bytePic = ananas.ByteFromImage(mainImage);
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
+                {
+                    int r1 = bytePic[i * 3 + 2 + j * w * 3];
+                    int g1 = bytePic[i * 3 + 1 + j * w * 3];
+                    int b1 = bytePic[i * 3 + j * w * 3];
+
+                    pmas[i, j] = (r1 + g1 + b1) / 3;
+                }
+
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    S[j, i] += pmas[j, i];
+                    if (j != 0 & i != 0) S[j, i] += S[j - 1, i] + S[j, i - 1] - S[j - 1, i - 1];
+                    if (j == 0 & i != 0) S[j, i] += S[j, i - 1];
+                    if (j != 0 & i == 0) S[j, i] += S[j - 1, i];
+                }
+            }
+            int a = int.Parse(textBox4.Text);
+            double k = double.Parse(textBox3.Text);
+            //Pix(pmas);
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    int ia = i - a / 2, ja = j - a / 2, i_a = i + a / 2, j_a = j + a / 2; int x1, x2, y1, y2;
+                    if (ia <= 0) ia = 0;
+                    if (i_a >= h) i_a = h - 1;
+                    if (ja <= 0) ja = 0;
+                    if (j_a >= w) j_a = w - 1;
+                    x1 = ja; x2 = j_a; y1 = ia; y2 = i_a;
+                    int Sum = 0;
+                    if (x1 != 0 & y1 != 0) Sum = S[x2, y2] + S[x1 - 1, y1 - 1] - S[x1 - 1, y2] - S[x2, y1 - 1];
+                    if (x1 == 0 & y1 != 0) Sum = S[x2, y2] - S[x2, y1 - 1];
+                    if (x1 != 0 & y1 == 0) Sum = S[x2, y2] - S[x1 - 1, y2];
+
+                   //Color pix;
+                    if (pmas[j, i] * a * a < Sum * (1 - k))
+                    {
+                        bytePic[i * 3 + 2 + j * w * 3] = 0;
+                        bytePic[i * 3 + 1 + j * w * 3] = 0;
+                        bytePic[i * 3 + j * w * 3] = 0;
+                    }
+                    else
+                    {
+                        bytePic[i * 3 + 2 + j * w * 3] = 255;
+                        bytePic[i * 3 + 1 + j * w * 3] = 255;
+                        bytePic[i * 3 + j * w * 3] = 255;
+                    }
+                    //mainImage.SetPixel(j, i, pix);
+                }
+            }
+            pictureBox1.Image = mainImage;
+            pictureBox1.Refresh();
+
+            result_image = (Bitmap)mainImage.Clone();
+            pictureBox4.Image = result_image;
+            pictureBox4.Refresh();
+            //Grey();
+        }
+
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox2.SelectedIndex == 0 ||
