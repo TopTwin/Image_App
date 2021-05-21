@@ -744,17 +744,17 @@ namespace ImgApp_2_WinForms
                     }
                 case 2:     //Критерий Ниблека
                     {
-                        Nublek_Sauvola_Bradly(1);
+                        Nublek_Sauvola_Woolf(1);
                         break;
                     }
                 case 3:     //Критерий Сауволы
                     {
-                        Nublek_Sauvola_Bradly(2);
+                        Nublek_Sauvola_Woolf(2);
                         break;
                     }
                 case 4:     //Критерий Кристиана Вульфа
                     {
-                        Nublek_Sauvola_Bradly(2);
+                        Nublek_Sauvola_Woolf(3);
                         break;
                     }
                 case 5:     //Критерий Брэдли-Рота
@@ -883,12 +883,7 @@ namespace ImgApp_2_WinForms
                         //mainImage.SetPixel(i, j, Color.FromArgb(0, 0, 0));
                 }
             mainImage = ananas.ImageFromByte(bytePic, w, h);
-            pictureBox1.Image = (Bitmap)mainImage;
-            pictureBox1.Refresh();
-
-            result_image = (Bitmap)mainImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox4.Refresh();
+            SetPictureBox1And4FromMainImage();
         }
 
         private void button12_Click(object sender, EventArgs e)
@@ -898,11 +893,11 @@ namespace ImgApp_2_WinForms
             else panel5.Visible = false;
         }
 
-        private void Nublek_Sauvola_Bradly(int num)
+        private void Nublek_Sauvola_Woolf(int num)
         {
             int a = int.Parse(textBox4.Text);
             int del = a * a;
-            int t = 0;
+            double t = 0;
             int min = 256;
             int w = mainImage.Width;
             int h = mainImage.Height;
@@ -914,25 +909,28 @@ namespace ImgApp_2_WinForms
             double[] o = new double[w * h + 1];
             //Pix(pmas);
             byte[] bytePic = ananas.ByteFromImage(mainImage);
-            for (int i = 0; i < w; i++)
-                for (int j = 0; j < h; j++)
+            for (int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
                 {
-                    int r1 = bytePic[i * 3 + 2 + j * w * 3];
-                    int g1 = bytePic[i * 3 + 1 + j * w * 3];
-                    int b1 = bytePic[i * 3 + j * w * 3];
+                    int r1 = bytePic[j * 3 + i * w * 3 + 2];
+                    int g1 = bytePic[j * 3 + i * w * 3 + 1];
+                    int b1 = bytePic[j * 3 + i * w * 3];
 
-                    pmas[i, j] = (r1 + g1 + b1) / 3;
+                    pmas[j, i] = (r1 + g1 + b1) / 3;     //Считаем его яркость
                 }
-
-            for (int i = 0; i < w; i++)
+            for (int i = 0; i < h; i++)
             {
-                for (int j = 0; j < h; j++)
+                for (int j = 0; j < w; j++)
                 {
-                    int ia = i - a / 2, ja = j - a / 2, i_a = i + a / 2, j_a = j + a / 2, ja1;
-                    if (ia <= 0) ia = 0;
-                    if (i_a >= h) i_a = h - 1;
-                    if (ja <= 0) ja = 0;
-                    if (j_a >= w) j_a = w - 1;
+                    int ia = i - a / 2, 
+                        ja = j - a / 2, 
+                        i_a = i + a / 2, 
+                        j_a = j + a / 2, 
+                        ja1;
+                    if (ia <= 0)    ia = 0;
+                    if (i_a >= h)   i_a = h - 1;
+                    if (ja <= 0)    ja = 0;
+                    if (j_a >= w)   j_a = w - 1;
                     ja1 = ja;
                     int count = 0;
                     while (ia <= i_a)
@@ -959,12 +957,12 @@ namespace ImgApp_2_WinForms
                     {
                         case 1:
                             {
-                                t = (int)(M[k] + sensitivity * o[k]);
+                                t = (M[k] + sensitivity * o[k]);
                                 break;
                             }
                         case 2:
                             {
-                                t = (int)(M[k] * (1 + sensitivity * (o[k] / 128 - 1)));
+                                t = (M[k] * (1 + sensitivity * (o[k] / 128 - 1)));
                                 break;
                             }
 
@@ -972,18 +970,21 @@ namespace ImgApp_2_WinForms
                     if (o[k] > maxo) maxo = o[k];
                     if (num != 3)
                     {
+                        //Color pix;
                         if (tmas[k] <= t)
                         {
-                            bytePic[i * 3 + 2 + j * w * 3] = 0;
-                            bytePic[i * 3 + 1 + j * w * 3] = 0;
-                            bytePic[i * 3 + j * w * 3] = 0;
+                            //pix = Color.FromArgb(0, 0, 0);
+                            bytePic[j * 3 + i * w * 3 + 2] = 0;
+                            bytePic[j * 3 + i * w * 3 + 1] = 0;
+                            bytePic[j * 3 + i * w * 3] = 0;
                         }
                         else
                         {
-                            bytePic[i * 3 + 2 + j * w * 3] = 255;
-                            bytePic[i * 3 + 1 + j * w * 3] = 255;
-                            bytePic[i * 3 + j * w * 3] = 255;
+                            bytePic[j * 3 + i * w * 3 + 2] = 255;
+                            bytePic[j * 3 + i * w * 3 + 1] = 255;
+                            bytePic[j * 3 + i * w * 3] = 255;
                         }
+                        //mainImage.SetPixel(j, i, pix);
                     }
                     k++;
                 }
@@ -995,31 +996,29 @@ namespace ImgApp_2_WinForms
                 {
                     for (int j = 0; j < w; j++)
                     {
-                        t = (int)((1 - 0.5) * M[k] + 0.5 * min + 0.5 * o[k] / maxo * (M[k] - min));
+                        t = (1 - 0.5) * M[k] + 0.5 * min + 0.5 * o[k] / maxo * (M[k] - min);
                         //Color pix;
                         if (tmas[k] <= t)
                         {
-                            bytePic[i * 3 + 2 + j * w * 3] = 0;
-                            bytePic[i * 3 + 1 + j * w * 3] = 0;
-                            bytePic[i * 3 + j * w * 3] = 0;
+                            //pix = Color.FromArgb(0, 0, 0);
+                            bytePic[j * 3 + i * w * 3 + 2] = 0;
+                            bytePic[j * 3 + i * w * 3 + 1] = 0;
+                            bytePic[j * 3 + i * w * 3] = 0;
                         }
                         else
                         {
-                            bytePic[i * 3 + 2 + j * w * 3] = 255;
-                            bytePic[i * 3 + 1 + j * w * 3] = 255;
-                            bytePic[i * 3 + j * w * 3] = 255;
+                            bytePic[j * 3 + i * w * 3 + 2] = 255;
+                            bytePic[j * 3 + i * w * 3 + 1] = 255;
+                            bytePic[j * 3 + i * w * 3] = 255;
+                            //pix = Color.FromArgb(255, 255, 255);
                         }
-                       //workingImage.SetPixel(j, i, pix);
+                        //mainImage.SetPixel(j, i, pix);
                         k++;
                     }
                 }
             }
-            pictureBox1.Image = mainImage;
-            pictureBox1.Refresh();
-
-            result_image = (Bitmap)mainImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox4.Refresh();
+            mainImage = ananas.ImageFromByte(bytePic, w, h);
+            SetPictureBox1And4FromMainImage();
             //Grey();
         }
         private void Bradly_Rot()
@@ -1030,19 +1029,19 @@ namespace ImgApp_2_WinForms
             int[,] pmas = new int[w + 1, h + 1]; int[,] S = new int[w + 1, h + 1];
             //Pix(pmas);
             byte[] bytePic = ananas.ByteFromImage(mainImage);
-            for (int i = 0; i < w; i++)
-                for (int j = 0; j < h; j++)
+            for (int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
                 {
-                    int r1 = bytePic[i * 3 + 2 + j * w * 3];
-                    int g1 = bytePic[i * 3 + 1 + j * w * 3];
-                    int b1 = bytePic[i * 3 + j * w * 3];
+                    int r1 = bytePic[j * 3 + i * w * 3 + 2];
+                    int g1 = bytePic[j * 3 + i * w * 3 + 1];
+                    int b1 = bytePic[j * 3 + i * w * 3];
 
-                    pmas[i, j] = (r1 + g1 + b1) / 3;
+                    pmas[j, i] = (r1 + g1 + b1) / 3;     //Считаем его яркость
                 }
 
-            for (int i = 0; i < w; i++)
+            for (int i = 0; i < h; i++)
             {
-                for (int j = 0; j < h; j++)
+                for (int j = 0; j < w; j++)
                 {
                     S[j, i] += pmas[j, i];
                     if (j != 0 & i != 0) S[j, i] += S[j - 1, i] + S[j, i - 1] - S[j - 1, i - 1];
@@ -1053,11 +1052,15 @@ namespace ImgApp_2_WinForms
             int a = int.Parse(textBox4.Text);
             double k = double.Parse(textBox3.Text);
             //Pix(pmas);
-            for (int i = 0; i < w; i++)
+            for (int i = 0; i < h; i++)
             {
-                for (int j = 0; j < h; j++)
+                for (int j = 0; j < w; j++)
                 {
-                    int ia = i - a / 2, ja = j - a / 2, i_a = i + a / 2, j_a = j + a / 2; int x1, x2, y1, y2;
+                    int ia = i - a / 2, 
+                        ja = j - a / 2, 
+                        i_a = i + a / 2, 
+                        j_a = j + a / 2; 
+                    int x1, x2, y1, y2;
                     if (ia <= 0) ia = 0;
                     if (i_a >= h) i_a = h - 1;
                     if (ja <= 0) ja = 0;
@@ -1068,28 +1071,26 @@ namespace ImgApp_2_WinForms
                     if (x1 == 0 & y1 != 0) Sum = S[x2, y2] - S[x2, y1 - 1];
                     if (x1 != 0 & y1 == 0) Sum = S[x2, y2] - S[x1 - 1, y2];
 
-                   //Color pix;
+                    //Color pix;
                     if (pmas[j, i] * a * a < Sum * (1 - k))
                     {
-                        bytePic[i * 3 + 2 + j * w * 3] = 0;
-                        bytePic[i * 3 + 1 + j * w * 3] = 0;
-                        bytePic[i * 3 + j * w * 3] = 0;
+                        //pix = Color.FromArgb(0, 0, 0);
+                        bytePic[j * 3 + i * w * 3 + 2] = 0;
+                        bytePic[j * 3 + i * w * 3 + 1] = 0;
+                        bytePic[j * 3 + i * w * 3] = 0;
                     }
                     else
                     {
-                        bytePic[i * 3 + 2 + j * w * 3] = 255;
-                        bytePic[i * 3 + 1 + j * w * 3] = 255;
-                        bytePic[i * 3 + j * w * 3] = 255;
+                        //pix = Color.FromArgb(255, 255, 255);
+                        bytePic[j * 3 + i * w * 3 + 2] = 255;
+                        bytePic[j * 3 + i * w * 3 + 1] = 255;
+                        bytePic[j * 3 + i * w * 3] = 255;
                     }
-                    //mainImage.SetPixel(j, i, pix);
+                    //workingImage.SetPixel(j, i, pix);
                 }
             }
-            pictureBox1.Image = mainImage;
-            pictureBox1.Refresh();
-
-            result_image = (Bitmap)mainImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox4.Refresh();
+            mainImage = ananas.ImageFromByte(bytePic, w, h);
+            SetPictureBox1And4FromMainImage();
             //Grey();
         }
 
@@ -1121,12 +1122,47 @@ namespace ImgApp_2_WinForms
                 textBox3.Visible = true;
                 textBox4.Visible = true;
 
-                label2.Location = new Point(10, 50);
-                label3.Location = new Point(10, 82);
+                label3.Location = new Point(10, 50);
+                label2.Location = new Point(10, 82);
                 textBox3.Location = new Point(120, 48);
                 textBox4.Location = new Point(120, 78);
                 comboBox2.Location = new Point(43, 10);
                 button11.Location = new Point(59, 118);
+
+                switch (comboBox2.SelectedIndex)
+                {
+                    case 2:
+                        {
+                            textBox3.Text = "-0,2";
+                            textBox4.Text = "20";
+                            break;
+                        }
+                    case 3:
+                        {
+                            textBox3.Text = "0,2";
+                            textBox4.Text = "20";
+                            break;
+                        }
+                    case 4:
+                        {
+                            label3.Visible = false;
+                            textBox3.Text = "20";
+                            textBox4.Visible = false;
+                            break;
+                        }
+                    case 5:
+                        {
+                            textBox3.Text = "0,15";
+                            textBox4.Text = "20";
+                            break;
+                        }
+                    default:
+                        {
+                            textBox3.Text = "";
+                            textBox4.Text = "";
+                            break;
+                        }
+                }
             }
         }
 
