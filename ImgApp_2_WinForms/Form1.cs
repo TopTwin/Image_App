@@ -14,17 +14,19 @@ namespace ImgApp_2_WinForms
 {
     public partial class Form1 : Form
     {
-        private Bitmap workingImage = null;
+        private Bitmap mainImage = null;
         private Bitmap secondImage = null;
         private Bitmap result_image = null;
+        private WorkingPictures workingPictures;
         private List<Bitmap> images = null;
+        private Size sizeLul = new Size(90, 80);    //размер маленьких окошек
         private bool choice_R = false;
         private bool choice_G = false;
         private bool choice_B = false;
         public Form1()
         {
             InitializeComponent();
-            workingImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            mainImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             result_image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             secondImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             images = new List<Bitmap>();
@@ -32,52 +34,70 @@ namespace ImgApp_2_WinForms
             if (pictureBox1.Image != null)
                 pictureBox1.Image.Dispose();
 
-            pictureBox1.Image = workingImage;
+            workingPictures = new WorkingPictures(panel4, sizeLul);
+            pictureBox1.Image = mainImage;
             radioButton1.Checked = true;
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
+
+            SetInitLocationElements();
+
+        }
+        private void SetInitLocationElements()
+        {
+            //955; 401
+            panel5.Location = new Point(955, 401);
+            //306; 65
+            panel3.Location = new Point(306, 65);
+            //140; 65
+            panel2.Location = new Point(289, 65);
+            //25; 65
+            panel1.Location = new Point(25, 65);
+            //449; 62
+            panel6.Location = new Point(449, 66);
         }
 
         private void Open_Click(object sender, EventArgs e)
         {
-            if (pictureBox2.Image != null && pictureBox3.Image != null)      //проверка на максимальное количество картинок
-            {
-                MessageBox.Show(
-                    "Открыто максимальное количество картинок"
-                    );
-                return;
-            }
             using OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
             openFileDialog.Filter = "Картинки (png, jpg, bmp, gif) |*.png;*.jpg;*.bmp;*.gif|All files (*.*)|*.*";
             openFileDialog.RestoreDirectory = true;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (pictureBox2.Image == null)       //если есть место для первой картинки, заполняем его
-                {
-                    workingImage = new Bitmap(openFileDialog.FileName);    //считываем картинку
-                    images.Add(workingImage);                              //добавляем картинку в память
-                    pictureBox1.Image = workingImage;                      //отображаем ее в маленькой рамке справа
-                    //изменяем размер картинки под маленькое окно
-                    workingImage = new Bitmap(workingImage, new Size(pictureBox2.Width, pictureBox2.Height));
-                    pictureBox2.Image = workingImage;                      //отображаем ее в основном окне
-                    workingImage = (Bitmap)images[0].Clone();
-                    if (panel1.Visible == true)
-                        GisDraw();
-                }
-                else                               //если есть место для второй картинки, заполняем его
-                {
-                    workingImage = new Bitmap(openFileDialog.FileName);    //считываем картинку
-                    images.Add(workingImage);                              //добавляем в память новую картинку
-                    pictureBox1.Image = workingImage;                      //отображаем ее в маленькой рамке справа
-                    //изменяем размер картинки под маленькое окно
-                    workingImage = new Bitmap(workingImage, new Size(pictureBox3.Width, pictureBox3.Height));
-                    pictureBox3.Image = workingImage;                      //отображаем ее в основном окне
-                    workingImage = (Bitmap)images[1].Clone();
-                    if (panel1.Visible == true)
-                        GisDraw();
-                }
+                mainImage = new Bitmap(openFileDialog.FileName);    //считываем картинку
+                workingPictures.AddNewPictureAndCheckBox(mainImage);    //создаем для картинки пикчрбокс
+                pictureBox1.Image = (Bitmap)mainImage.Clone();                      //отображаем ее в основном окне
+                workingPictures.SetLocationOnPanel();
+                if (panel1.Visible == true)
+                    GisDraw();
             }
+            //if (pictureBox2.Image != null && pictureBox3.Image != null)      //проверка на максимальное количество картинок
+            //{
+            //    MessageBox.Show(
+            //        "Открыто максимальное количество картинок"
+            //        );
+            //    return;
+            //}
+            //using OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+            //openFileDialog.Filter = "Картинки (png, jpg, bmp, gif) |*.png;*.jpg;*.bmp;*.gif|All files (*.*)|*.*";
+            //openFileDialog.RestoreDirectory = true;
+            //if (openFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    if (pictureBox2.Image == null)       //если есть место для первой картинки, заполняем его
+            //    {
+            //        InitPicture(openFileDialog, pictureBox2);
+            //        if (panel1.Visible == true)
+            //            GisDraw();
+            //    }
+            //    else                               //если есть место для второй картинки, заполняем его
+            //    {
+            //        InitPicture(openFileDialog, pictureBox3);
+            //        if (panel1.Visible == true)
+            //            GisDraw();
+            //    }
+            //}
         }
         private void Save_Click(object sender, EventArgs e)
         {
@@ -96,53 +116,31 @@ namespace ImgApp_2_WinForms
         }
         private void Draw_Click(object sender, EventArgs e)
         {
-            if (images.Count == 2)
+            var time = DateTime.Now;
+            
+            switch (comboBox1.SelectedIndex)
             {
-                var time = DateTime.Now;
-
-                Size size_1 = images[0].Size;               //размеры картинок
-                Size size_2 = images[1].Size;
-
-                if (comboBox1.SelectedIndex < 4)
-                {
-                    if (size_1.Width * size_1.Height > size_2.Width * size_2.Height)    //ищем наибольшую картинку
-                    {
-                        workingImage = (Bitmap)images[0].Clone();          //берем за основу большую картинку
-                        secondImage = new Bitmap(images[1]);           //в доп переменную кладем вторую
-                    }
-                    else
-                    {
-                        workingImage = (Bitmap)images[1].Clone();          //тоже самое что чуть выше
-                        secondImage = new Bitmap(images[0]);
-                    }
-                    //увеличим меньшую картинку до размеров большой
-                    secondImage = new Bitmap(secondImage, new Size(workingImage.Width, workingImage.Height));
-                }
-
-                switch (comboBox1.SelectedIndex)
-                {
-                    case 0:
-                        SummPix();
-                        break;
-                    case 1:
-                        ArithmeticMeanPix();
-                        break;
-                    case 2:
-                        MinPix();
-                        break;
-                    case 3:
-                        MaxPix();
-                        break;
-                    case 4:
-                        CompositionPix();
-                        break;
-                }
-                if (panel1.Visible == true)
-                    GisDraw();
-                secondImage.Dispose();
-                var time2 = DateTime.Now;
-                Console.WriteLine(Math.Round((time2 - time).TotalMilliseconds) + "мс");
+                case 0:
+                    SummPix();
+                    break;
+                case 1:
+                    ArithmeticMidlePix();
+                    break;
+                case 2:
+                    MinPix();
+                    break;
+                case 3:
+                    MaxPix();
+                    break;
+                case 4:
+                    CompositionPix();
+                    break;
             }
+            System.GC.Collect();
+            if (panel1.Visible == true)
+                GisDraw();
+            var time2 = DateTime.Now;
+            Console.WriteLine(Math.Round((time2 - time).TotalMilliseconds) + "мс");
         }
         public static T Clamp<T>(T val, T min, T max) where T : IComparable<T>
         {
@@ -155,9 +153,9 @@ namespace ImgApp_2_WinForms
             if (images.Count >= 1)
             {
                 pictureBox1.Image = images[0];
-                if (workingImage != null)
-                    workingImage.Dispose();
-                workingImage = (Bitmap)images[0].Clone();
+                if (mainImage != null)
+                    mainImage.Dispose();
+                mainImage = (Bitmap)images[0].Clone();
 
                 if (panel1.Visible == true)
                 {
@@ -171,9 +169,9 @@ namespace ImgApp_2_WinForms
             if (images.Count >= 2)
             {
                 pictureBox1.Image = images[1];
-                if (workingImage != null)
-                    workingImage.Dispose();
-                workingImage = (Bitmap)images[1].Clone();
+                if (mainImage != null)
+                    mainImage.Dispose();
+                mainImage = (Bitmap)images[1].Clone();
 
                 if (panel1.Visible == true)
                 {
@@ -184,82 +182,145 @@ namespace ImgApp_2_WinForms
         }
         private void pictureBox4_Click(object sender, EventArgs e)
         {
-            if (result_image != null)
-            {
-                if (workingImage != null)
-                    workingImage.Dispose();
-                pictureBox1.Image = result_image;
-                workingImage = (Bitmap)result_image.Clone();
-            }
-
+            pictureBox1.Image = (Bitmap)pictureBox4.Image.Clone();
+            mainImage = (Bitmap)result_image.Clone();
             if (panel1.Visible == true)
             {
                 GisDraw();
                 pictureBox5.Refresh();
             }
         }
-        private void ArithmeticMeanPix()
+        private Size MaxSizeOfPictures(List<PictureBox> _pictureBoxes)
         {
+            Size _size = new Size(0, 0);
 
-            for (int i = 0; i < workingImage.Height; i++)      //цикл перебора пикселей
+            foreach (var pb in _pictureBoxes)
             {
-                for (int j = 0; j < workingImage.Width; j++)
-                {
-                    var pix1 = workingImage.GetPixel(j, i);        //получаем пиксили картинок
-                    var pix2 = secondImage.GetPixel(j, i);
-
-                    int R = 0;
-                    int G = 0;
-                    int B = 0;
-
-                    if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
-                        R = Clamp((pix1.R + pix2.R) / 2, 0, 255);
-                    if (choice_G)
-                        G = Clamp((pix1.G + pix2.G) / 2, 0, 255);
-                    if (choice_B)
-                        B = Clamp((pix1.B + pix2.B) / 2, 0, 255);
-
-                    pix1 = Color.FromArgb(R, G, B);
-                    workingImage.SetPixel(j, i, pix1);
-                }
+                if (pb.Image.Width * pb.Image.Height >
+                   _size.Width * _size.Height)
+                    _size = pb.Image.Size;
             }
-            if (result_image != null)
-                result_image.Dispose();
-            result_image = (Bitmap)workingImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox1.Image = workingImage;
+
+            return _size;
+        }
+        private void SetPictureBox1And4FromMainImage()
+        {
+            if (pictureBox1.Image != null)
+                pictureBox1.Image.Dispose();
+            pictureBox1.Image = (Bitmap)mainImage.Clone();
             pictureBox1.Refresh();
+
+            pictureBox4.Image = (Bitmap)mainImage.Clone();
+            pictureBox4.Refresh();
+        }
+
+        #region pix_Operations
+
+        private void ArithmeticMidlePix()
+        {
+            List<int> numbersCheckedBoxes = workingPictures.GetNumbersCheckedBoxes();
+            if (numbersCheckedBoxes.Count == 0)
+            {
+                MessageBox.Show("Выберите две картинки");
+            }
+            else
+            {
+                List<PictureBox> pb = workingPictures.GetCheckedPictures();
+                Size _size = MaxSizeOfPictures(pb);
+
+                int[] allBytes = new int[_size.Width * _size.Height * 3];
+
+                for (int k = 0; k < pb.Count; k++)
+                {
+                    Bitmap pic = new Bitmap((Bitmap)pb[k].Image, _size);
+                    byte[] bytePic = ananas.ByteFromImage(pic);
+                    for (int i = 0; i < _size.Width; i++)
+                    {
+                        for(int j = 0; j < _size.Height; j++)
+                        {
+                            allBytes[i * 3 + j * _size.Width * 3] += bytePic[i * 3 + j * _size.Width * 3];
+                            allBytes[i * 3 + 1 + j * _size.Width * 3] += bytePic[i * 3 + 1 + j * _size.Width * 3];
+                            allBytes[i * 3 + 2 + j * _size.Width * 3] += bytePic[i * 3 + 2 + j * _size.Width * 3];
+                        }
+                    }
+                    pic.Dispose();
+                }
+                if (mainImage != null)
+                    mainImage.Dispose();
+                mainImage = new Bitmap(_size.Width, _size.Height);
+
+                byte[] retultBytes = new byte[_size.Width * _size.Height * 3];
+                for (int i = 0; i < _size.Width; i++)       
+                {
+                    for (int j = 0; j < _size.Height; j++)
+                    {
+                        allBytes[i * 3 + j * _size.Width * 3] /= pb.Count;
+                        allBytes[i * 3 + 1 + j * _size.Width * 3] /= pb.Count;
+                        allBytes[i * 3 + 2 + j * _size.Width * 3] /= pb.Count;
+
+                        if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
+                            retultBytes[i * 3 + 2 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + 2 + j * _size.Width * 3]), 0, 255);
+                        if (choice_G)
+                            retultBytes[i * 3 + 1 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + 1 + j * _size.Width * 3]), 0, 255);
+                        if (choice_B)
+                            retultBytes[i * 3 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + j * _size.Width * 3]), 0, 255);
+                    }
+                }
+                mainImage = ananas.ImageFromByte(retultBytes, _size.Width, _size.Height);
+                SetPictureBox1And4FromMainImage();
+            }
         }
         private void SummPix()
         {
-            for (int i = 0; i < workingImage.Height; i++)      //цикл перебора пикселей
+            List<int> numbersCheckedBoxes = workingPictures.GetNumbersCheckedBoxes();
+            if (numbersCheckedBoxes.Count == 0)
             {
-                for (int j = 0; j < workingImage.Width; j++)
-                {
-                    var pix1 = workingImage.GetPixel(j, i);        //получаем пиксили картинок
-                    var pix2 = secondImage.GetPixel(j, i);
-
-                    int R = 0;
-                    int G = 0;
-                    int B = 0;
-
-                    if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
-                        R = Clamp((pix1.R + pix2.R), 0, 255);
-                    if (choice_G)
-                        G = Clamp((pix1.G + pix2.G), 0, 255);
-                    if (choice_B)
-                        B = Clamp((pix1.B + pix2.B), 0, 255);
-
-                    pix1 = Color.FromArgb(R, G, B);
-                    workingImage.SetPixel(j, i, pix1);
-                }
+                MessageBox.Show("Выберите две картинки");
             }
-            if (result_image != null)
-                result_image.Dispose();
-            result_image = (Bitmap)workingImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox1.Image = workingImage;
-            pictureBox1.Refresh();
+            else
+            {
+                List<PictureBox> pb = workingPictures.GetCheckedPictures();
+                Size _size = MaxSizeOfPictures(pb);
+
+                int[] allBytes = new int[_size.Width * _size.Height * 3];
+
+                for (int k = 0; k < pb.Count; k++)
+                {
+                    Bitmap pic = new Bitmap((Bitmap)pb[k].Image.Clone(), _size);
+                    byte[] bytePic = ananas.ByteFromImage(pic);
+                    for (int i = 0; i < _size.Width; i++)
+                    {
+                        for (int j = 0; j < _size.Height; j++)
+                        {
+                            allBytes[i * 3 + j * _size.Width * 3] += bytePic[i * 3 + j * _size.Width * 3];
+                            allBytes[i * 3 + 1 + j * _size.Width * 3] += bytePic[i * 3 + 1 + j * _size.Width * 3];
+                            allBytes[i * 3 + 2 + j * _size.Width * 3] += bytePic[i * 3 + 2 + j * _size.Width * 3];
+                        }
+                    }
+                    pic.Dispose();
+                }
+                
+                if (mainImage != null)
+                    mainImage.Dispose();
+                mainImage = new Bitmap(_size.Width, _size.Height);
+
+                byte[] retultBytes = new byte[_size.Width * _size.Height * 3];
+
+                for (int i = 0; i < _size.Width; i++)
+                {
+                    for (int j = 0; j < _size.Height; j++)
+                    {
+                        if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
+                            retultBytes[i * 3 + 2 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + 2 + j * _size.Width * 3]), 0, 255);
+                        if (choice_G)
+                            retultBytes[i * 3 + 1 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + 1 + j * _size.Width * 3]), 0, 255);
+                        if (choice_B)
+                            retultBytes[i * 3 + j * _size.Width * 3] = (byte)Clamp((allBytes[i * 3 + j * _size.Width * 3]), 0, 255);
+                    }
+                }
+                mainImage = ananas.ImageFromByte(retultBytes, _size.Width, _size.Height);
+                SetPictureBox1And4FromMainImage();
+            }
         }
         private void CompositionPix()
         {
@@ -276,194 +337,158 @@ namespace ImgApp_2_WinForms
                     );
                 return;
             }
-            for (int i = 0; i < workingImage.Height; i++)      //цикл перебора пикселей
-            {
-                for (int j = 0; j < workingImage.Width; j++)
-                {
-                    var pix1 = workingImage.GetPixel(j, i);        //получаем пиксили картинок
 
-                    int R = 0;
-                    int G = 0;
-                    int B = 0;
+            byte[] retultBytes = ananas.ByteFromImage(mainImage);
+
+            for (int i = 0; i < mainImage.Width; i++)      //цикл перебора пикселей
+            {
+                for (int j = 0; j < mainImage.Height; j++)
+                {
+                    double lul1 = koef * (retultBytes[i * 3 + 2 + j * mainImage.Width * 3]);
+                    double lul2 = koef * (retultBytes[i * 3 + 1 + j * mainImage.Width * 3]);
+                    double lul3 = koef * (retultBytes[i * 3 + j * mainImage.Width * 3]);
+
 
                     if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
-                        R = Clamp((int)(pix1.R * koef), 0, 255);
+                        retultBytes[i * 3 + 2 + j * mainImage.Width * 3] = (byte)Clamp(lul1, 0, 255);
                     if (choice_G)
-                        G = Clamp((int)(pix1.G * koef), 0, 255);
+                        retultBytes[i * 3 + 1 + j * mainImage.Width * 3] = (byte)Clamp(lul2, 0, 255);
                     if (choice_B)
-                        B = Clamp((int)(pix1.B * koef), 0, 255);
+                        retultBytes[i * 3 + j * mainImage.Width * 3] = (byte)Clamp(lul3, 0, 255);
 
-                    pix1 = Color.FromArgb(R, G, B);
-                    workingImage.SetPixel(j, i, pix1);
                 }
             }
-            if (result_image != null)
-                result_image.Dispose();
-            result_image = (Bitmap)workingImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox1.Image = workingImage;
-            pictureBox1.Refresh();
+            mainImage = ananas.ImageFromByte(retultBytes, mainImage.Width, mainImage.Height);
+            SetPictureBox1And4FromMainImage();
         }
         private void MaxPix()
         {
-            for (int i = 0; i < workingImage.Height; i++)      //цикл перебора пикселей
+            List<int> numbersCheckedBoxes = workingPictures.GetNumbersCheckedBoxes();
+            if (numbersCheckedBoxes.Count == 0)
             {
-                for (int j = 0; j < workingImage.Width; j++)
-                {
-                    var pix1 = workingImage.GetPixel(j, i);        //получаем пиксили картинок
-                    var pix2 = secondImage.GetPixel(j, i);
-
-                    int R = 0;
-                    int G = 0;
-                    int B = 0;
-
-                    if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
-                        if ((pix1.R > pix2.R))
-                            R = Clamp((pix1.R), 0, 255);
-                        else
-                            R = Clamp((pix2.R), 0, 255);
-
-                    if (choice_G)
-                        if ((pix1.G > pix2.G))
-                            G = Clamp((pix1.G), 0, 255);
-                        else
-                            G = Clamp((pix2.G), 0, 255);
-
-                    if (choice_B)
-                        if (pix1.B > pix2.B)
-                            B = Clamp((pix1.B), 0, 255);
-                        else
-                            B = Clamp((pix2.B), 0, 255);
-
-                    pix1 = Color.FromArgb(R, G, B);
-                    workingImage.SetPixel(j, i, pix1);
-                }
+                MessageBox.Show("Выберите две картинки");
             }
-            if (result_image != null)
-                result_image.Dispose();
-            result_image = (Bitmap)workingImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox1.Image = workingImage;
-            pictureBox1.Refresh();
+            else
+            {
+                List<PictureBox> pb = workingPictures.GetCheckedPictures();
+                Size _size = MaxSizeOfPictures(pb);
+
+                byte[] resultBytes = new byte[_size.Width * _size.Height * 3];
+                
+                for (int k = 0; k < pb.Count; k++)
+                {
+                    Bitmap pic = new Bitmap((Bitmap)pb[k].Image.Clone(), _size);
+                    byte[] bytePic = ananas.ByteFromImage(pic);
+                    for (int i = 0; i < _size.Width; i++)
+                    {
+                        for (int j = 0; j < _size.Height; j++)
+                        {
+                            if (k == 0)
+                            {
+                                resultBytes[i * 3 + 2 + j * _size.Width * 3] = bytePic[i * 3 + 2 + j * _size.Width * 3];
+                                resultBytes[i * 3 + 1 + j * _size.Width * 3] = bytePic[i * 3 + 1 + j * _size.Width * 3];
+                                resultBytes[i * 3 + j * _size.Width * 3] = bytePic[i * 3 + j * _size.Width * 3];
+                            }
+                            else
+                            {
+                                int abc = resultBytes[i * 3 + 2 + j * _size.Width * 3] +
+                                          resultBytes[i * 3 + 1 + j * _size.Width * 3] +
+                                          resultBytes[i * 3 + j * _size.Width * 3];
+                                int abc2 = bytePic[i * 3 + 2 + j * _size.Width * 3] +
+                                           bytePic[i * 3 + 1 + j * _size.Width * 3] +
+                                           bytePic[i * 3 + j * _size.Width * 3];
+
+                                if (abc < abc2)
+                                {
+                                    resultBytes[i * 3 + 2 + j * _size.Width * 3] = bytePic[i * 3 + 2 + j * _size.Width * 3];
+                                    resultBytes[i * 3 + 1 + j * _size.Width * 3] = bytePic[i * 3 + 1 + j * _size.Width * 3];
+                                    resultBytes[i * 3 + j * _size.Width * 3] = bytePic[i * 3 + j * _size.Width * 3];
+                                }
+                            }
+                        }
+                    }
+                    pic.Dispose();
+                }
+
+                mainImage = ananas.ImageFromByte(resultBytes, _size.Width, _size.Height);
+                SetPictureBox1And4FromMainImage();
+            }
         }
         private void MinPix()
         {
-            for (int i = 0; i < workingImage.Height; i++)      //цикл перебора пикселей
+            List<int> numbersCheckedBoxes = workingPictures.GetNumbersCheckedBoxes();
+            if (numbersCheckedBoxes.Count == 0)
             {
-                for (int j = 0; j < workingImage.Width; j++)
+                MessageBox.Show("Выберите две картинки");
+            }
+            else
+            {
+                List<PictureBox> pb = workingPictures.GetCheckedPictures();
+                Size _size = MaxSizeOfPictures(pb);
+
+                byte[] resultBytes = new byte[_size.Width * _size.Height * 3];
+
+                for (int k = 0; k < pb.Count; k++)
                 {
-                    var pix1 = workingImage.GetPixel(j, i);        //получаем пиксили картинок
-                    var pix2 = secondImage.GetPixel(j, i);
-
-                    int R = 0;
-                    int G = 0;
-                    int B = 0;
-
-                    if (choice_R)           //обрабатываем цвета в зависимости от выбранного цветового канала
-                        if ((pix1.R < pix2.R))
-                            R = Clamp((pix1.R), 0, 255);
-                        else
-                            R = Clamp((pix2.R), 0, 255);
-
-                    if (choice_G)
-                        if ((pix1.G < pix2.G))
-                            G = Clamp((pix1.G), 0, 255);
-                        else
-                            G = Clamp((pix2.G), 0, 255);
-
-                    if (choice_B)
-                        if (pix1.B < pix2.B)
-                            B = Clamp((pix1.B), 0, 255);
-                        else
-                            B = Clamp((pix2.B), 0, 255);
-
-                    pix1 = Color.FromArgb(R, G, B);
-                    workingImage.SetPixel(j, i, pix1);
+                    Bitmap pic = new Bitmap((Bitmap)pb[k].Image.Clone(), _size);
+                    byte[] bytePic = ananas.ByteFromImage(pic);
+                    for (int i = 0; i < _size.Width; i++)
+                    {
+                        for (int j = 0; j < _size.Height; j++)
+                        {
+                            if (k == 0)
+                            {
+                                resultBytes[i * 3 + 2 + j * _size.Width * 3] = bytePic[i * 3 + 2 + j * _size.Width * 3];
+                                resultBytes[i * 3 + 1 + j * _size.Width * 3] = bytePic[i * 3 + 1 + j * _size.Width * 3];
+                                resultBytes[i * 3 + j * _size.Width * 3] = bytePic[i * 3 + j * _size.Width * 3];
+                            }
+                            else
+                            {
+                                int abc = resultBytes[i * 3 + 2 + j * _size.Width * 3] +
+                                          resultBytes[i * 3 + 1 + j * _size.Width * 3] +
+                                          resultBytes[i * 3 + j * _size.Width * 3];
+                                int abc2 = bytePic[i * 3 + 2 + j * _size.Width * 3] +
+                                           bytePic[i * 3 + 1 + j * _size.Width * 3] +
+                                           bytePic[i * 3 + j * _size.Width * 3];
+                                
+                                if(abc > abc2)
+                                {
+                                    resultBytes[i * 3 + 2 + j * _size.Width * 3] = bytePic[i * 3 + 2 + j * _size.Width * 3];
+                                    resultBytes[i * 3 + 1 + j * _size.Width * 3] = bytePic[i * 3 + 1 + j * _size.Width * 3];
+                                    resultBytes[i * 3 + j * _size.Width * 3] = bytePic[i * 3 + j * _size.Width * 3];
+                                }
+                            }
+                        }
+                    }
+                    pic.Dispose();
                 }
-            }
-            if (result_image != null)
-                result_image.Dispose();
-            result_image = (Bitmap)workingImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox1.Image = workingImage;
-            pictureBox1.Refresh();
-        }
-        private void R_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton2.Checked)
-            {
-                choice_R = true;
-                choice_G = false;
-                choice_B = false;
+
+                mainImage = ananas.ImageFromByte(resultBytes, _size.Width, _size.Height);
+                SetPictureBox1And4FromMainImage();
             }
         }
 
-        private void RGB_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton1.Checked)
-            {
-                choice_R = true;
-                choice_G = true;
-                choice_B = true;
-            }
-        }
-
-        private void G_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton3.Checked)
-            {
-                choice_R = false;
-                choice_G = true;
-                choice_B = false;
-            }
-        }
-
-        private void B_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton4.Checked)
-            {
-                choice_R = false;
-                choice_G = false;
-                choice_B = true;
-            }
-        }
-
-        private void RG_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton5.Checked)
-            {
-                choice_R = true;
-                choice_G = true;
-                choice_B = false;
-            }
-        }
-
-        private void RB_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton6.Checked)
-            {
-                choice_R = true;
-                choice_G = false;
-                choice_B = true;
-            }
-        }
-
-        private void GB_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton7.Checked)
-            {
-                choice_R = false;
-                choice_G = true;
-                choice_B = true;
-            }
-        }
-
+        #endregion
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //971; 458
+
             if (comboBox1.SelectedIndex == 4)
+            {
                 textBox1.Visible = true;
+                button3.Location = new Point(971, 498);
+                button4.Location = new Point(973, 643);
+                pictureBox4.Location = new Point(971, 536);
+
+            }
             else
+            {
                 textBox1.Visible = false;
+
+                button3.Location = new Point(971, 498 - 35);
+                button4.Location = new Point(973, 643 - 35);
+                pictureBox4.Location = new Point(971, 536 - 35);
+            }
         }
 
         private void Gistogramm(object sender, EventArgs e)
@@ -482,15 +507,17 @@ namespace ImgApp_2_WinForms
                 pictureBox5.Image.Dispose();
 
             pictureBox5.Image = new Bitmap(pictureBox5.Width, pictureBox5.Height);
-
+            byte[] picBytes = ananas.ByteFromImage(mainImage);
             int[] N = new int[256];
-            for (int i = 0; i < workingImage.Width; i++)      //цикл перебора пикселей
+            for (int i = 0; i < mainImage.Width; i++)      //цикл перебора пикселей
             {
-                for (int j = 0; j < workingImage.Height; j++)
+                for (int j = 0; j < mainImage.Height; j++)
                 {
-                    var pix1 = workingImage.GetPixel(i, j);        //получаем пиксили картинок
-
-                    var c = (pix1.R + pix1.B + pix1.G) / 3;
+                    //получаем пиксили картинок
+                    var c = (picBytes[i * 3 + 2 + j * mainImage.Width * 3] +
+                             picBytes[i * 3 + 1 + j * mainImage.Width * 3] +
+                             picBytes[i * 3 + j * mainImage.Width * 3])
+                             / 3;
                     N[c]++;
                 }
             }
@@ -507,7 +534,6 @@ namespace ImgApp_2_WinForms
                 b[0] = i; b[1] = pictureBox5.Height - 1 - N[i] * k;
                 grap.DrawLine(pp, a[0], a[1], b[0], b[1]);
             }
-
             grap.Dispose();
             pp.Dispose();
         }
@@ -536,10 +562,10 @@ namespace ImgApp_2_WinForms
             int R = 0;
             int G = 0;
             int B = 0;
-            for (int i = 0; i < workingImage.Width; i++)         //Перебираем пиксели
-                for (int j = 0; j < workingImage.Height; j++)
+            for (int i = 0; i < mainImage.Width; i++)         //Перебираем пиксели
+                for (int j = 0; j < mainImage.Height; j++)
                 {
-                    var pix = workingImage.GetPixel(i, j);      //Считываем пиксель
+                    var pix = mainImage.GetPixel(i, j);      //Считываем пиксель
                     double c = (pix.R + pix.B + pix.G) / 3;        //Считаем его яркость
                     double sum = pix.R + pix.B + pix.G;
                     double k = lineInterpolation.Interpolate(c);    //Производим градационные преобразования
@@ -557,22 +583,22 @@ namespace ImgApp_2_WinForms
                         B = (int)Clamp((k), 0, 255);
                     }
                     pix = Color.FromArgb(R, G, B);
-                    workingImage.SetPixel(i, j, pix);
+                    mainImage.SetPixel(i, j, pix);
                 }
             if (result_image != null)
                 result_image.Dispose();
-            result_image = (Bitmap)workingImage.Clone();
+            result_image = (Bitmap)mainImage.Clone();
             pictureBox4.Image = result_image;
-            pictureBox1.Image = workingImage;
+            pictureBox1.Image = mainImage;
             pictureBox1.Refresh();
-            
-            if(pictureBox6.Visible == true)
+
+            if (pictureBox6.Visible == true)
             {
                 PaintGraphic();
                 pictureBox6.Refresh();
             }
-            
-            if(panel1.Visible == true)
+
+            if (panel1.Visible == true)
             {
                 GisDraw();
             }
@@ -585,7 +611,7 @@ namespace ImgApp_2_WinForms
             textBox2.Text = "";
             if (pictureBox6.Visible == true)
             {
-                if(pictureBox6.Image != null)
+                if (pictureBox6.Image != null)
                     pictureBox6.Image.Dispose();
                 pictureBox6.Image = new Bitmap(pictureBox6.Width, pictureBox6.Height);
             }
@@ -647,12 +673,12 @@ namespace ImgApp_2_WinForms
             {
                 return;
             }
-            
+
             Graphics grap = Graphics.FromImage(pictureBox6.Image);
             Pen pp = new Pen(Color.FromArgb(0, 0, 0), 1);
-            for (int i = 0; i < n-1; i++)
+            for (int i = 0; i < n - 1; i++)
             {
-                grap.DrawLine(pp, (float)X[i], 255 - (float)Y[i], (float)X[i+1], 255 - (float)Y[i+1]);
+                grap.DrawLine(pp, (float)X[i], 255 - (float)Y[i], (float)X[i + 1], 255 - (float)Y[i + 1]);
                 grap.DrawRectangle(pp, (float)X[i], 255 - (float)Y[i], 3, 3);
             }
             grap.DrawRectangle(pp, (float)X[n - 1], 255 - (float)Y[n - 1], 3, 3);
@@ -663,37 +689,36 @@ namespace ImgApp_2_WinForms
 
         private void pictureBox7_MouseEnter(object sender, EventArgs e)
         {
-            if (pictureBox7.Image != null)
-                pictureBox7.Image.Dispose();
-           
-            pictureBox7.Image = new Bitmap(pictureBox7.Width, pictureBox7.Height);
-           
-            pictureBox7.MouseClick += new MouseEventHandler(lulJS);
-           
-            Graphics grap = Graphics.FromImage(pictureBox7.Image);
-            Pen pp = new Pen(Color.FromArgb(0, 0, 0), 1);
-            
-            grap.DrawLine(pp, 0, 255, 255, 0);
-            grap.DrawRectangle(pp, 0, 255, 3, 3);
-            grap.DrawRectangle(pp, 255, 0, 3, 3);
-            
-            grap.Dispose();
-            pp.Dispose();
+            // if (pictureBox7.Image != null)
+            //     pictureBox7.Image.Dispose();
+            //
+            // pictureBox7.Image = new Bitmap(pictureBox7.Width, pictureBox7.Height);
+            //
+            // pictureBox7.MouseClick += new MouseEventHandler(lulJS);
+            //
+            // Graphics grap = Graphics.FromImage(pictureBox7.Image);
+            // Pen pp = new Pen(Color.FromArgb(0, 0, 0), 1);
+            // 
+            // grap.DrawLine(pp, 0, 255, 255, 0);
+            // grap.DrawRectangle(pp, 0, 255, 3, 3);
+            // grap.DrawRectangle(pp, 255, 0, 3, 3);
+            // 
+            // grap.Dispose();
+            // pp.Dispose();
         }
-
 
         private void lulJS(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            Graphics grap = Graphics.FromImage(pictureBox7.Image);
-            Pen pp = new Pen(Color.FromArgb(0, 0, 0), 1);
-
-            Point point = e.Location;
-            grap.DrawRectangle(pp, point.X, point.Y, 3, 3);
-
-            pictureBox7.Refresh();
-
-            grap.Dispose();
-            pp.Dispose();
+            //Graphics grap = Graphics.FromImage(pictureBox7.Image);
+            //Pen pp = new Pen(Color.FromArgb(0, 0, 0), 1);
+            //
+            //Point point = e.Location;
+            //grap.DrawRectangle(pp, point.X, point.Y, 3, 3);
+            //
+            //pictureBox7.Refresh();
+            //
+            //grap.Dispose();
+            //pp.Dispose();
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -702,23 +727,12 @@ namespace ImgApp_2_WinForms
                 panel3.Visible = false;
             else panel3.Visible = true;
 
-            if(comboBox2.SelectedIndex == 1 || 
-               comboBox2.SelectedIndex == 2)
-            {
-                comboBox2.Size = new Size(132, 80);
-                comboBox2.Location = new Point(16, 6);
-                button11.Location = new Point(29, 42);
-            }
-            else
-            {
-
-            }
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
             int n = comboBox2.SelectedIndex;
-            switch(n)
+            switch (n)
             {
                 case 0:     //Критерий Гаврилова
                     {
@@ -732,17 +746,16 @@ namespace ImgApp_2_WinForms
                     }
                 case 2:     //Критерий Ниблека
                     {
-                        Nublek_Sauvola_Bradly(1);
-                        break;
+                        Nublek_Sauvola_Woolf(1);
                     }
                 case 3:     //Критерий Сауволы
                     {
-                        Nublek_Sauvola_Bradly(2);
+                        Nublek_Sauvola_Woolf(2);
                         break;
                     }
                 case 4:     //Критерий Кристиана Вульфа
                     {
-                        Nublek_Sauvola_Bradly(2);
+                        Nublek_Sauvola_Woolf(3);
                         break;
                     }
                 case 5:     //Критерий Брэдли-Рота
@@ -772,26 +785,26 @@ namespace ImgApp_2_WinForms
 
         private void Otsu()
         {
-            int w = workingImage.Width;
-            int h = workingImage.Height;
+            int w = mainImage.Width;
+            int h = mainImage.Height;
             int[] N = new int[256];
             int all_pixel_count = w * h;
             int all_intensity_sum = 0; int k = 0;
             int[] tmas = new int[w * h + 1];
-            for (int i = 0; i < h; ++i)
+            byte[] bytePic = ananas.ByteFromImage(mainImage);
+            for (int i = 0; i < w; ++i)
             {
-                for (int j = 0; j < w; ++j)
+                for (int j = 0; j < h; ++j)
                 {
-                    var pix1 = workingImage.GetPixel(j, i);
-                    int r1 = pix1.R;
-                    int g1 = pix1.G;
-                    int b1 = pix1.B;
+                    //var pix1 = mainImage.GetPixel(j, i);
+                    int r1 = bytePic[i * 3 + 2 + j * w * 3];
+                    int g1 = bytePic[i * 3 + 1 + j * w * 3];
+                    int b1 = bytePic[i * 3 + j * w * 3];
                     all_intensity_sum += (r1 + g1 + b1) / 3;
                     tmas[k] = (r1 + g1 + b1) / 3; k++;
                     N[(r1 + g1 + b1) / 3]++;
                 }
             }
-
 
             int best_thresh = 0;
             double best_sigma = 0.0;
@@ -824,60 +837,430 @@ namespace ImgApp_2_WinForms
                 }
             }
             k = 0;
-            for (int i = 0; i < h; i++)
+            for (int i = 0; i < w; i++)
             {
-                for (int j = 0; j < w; j++)
+                for (int j = 0; j < h; j++)
                 {
-                    Color pix;
                     if (tmas[k] <= best_thresh)
                     {
-                        pix = Color.FromArgb(0, 0, 0);
+                        bytePic[i * 3 + 2 + j * w * 3] = 0;
+                        bytePic[i * 3 + 1 + j * w * 3] = 0;
+                        bytePic[i * 3 + j * w * 3] = 0;
                     }
                     else
                     {
-                        pix = Color.FromArgb(255, 255, 255);
+                        bytePic[i * 3 + 2 + j * w * 3] = 255;
+                        bytePic[i * 3 + 1 + j * w * 3] = 255;
+                        bytePic[i * 3 + j * w * 3] = 255;
                     }
-                    workingImage.SetPixel(j, i, pix); k++;
+                    k++;
                 }
             }
-
-            pictureBox1.Image = workingImage;
+            mainImage = ananas.ImageFromByte(bytePic, w, h);
+            pictureBox1.Image = mainImage;
             pictureBox1.Refresh();
 
-            result_image = (Bitmap)workingImage.Clone();
+            result_image = (Bitmap)mainImage.Clone();
             pictureBox4.Image = result_image;
             pictureBox4.Refresh();
         }
         private void Gavrilov()
         {
+            int w = mainImage.Width;
+            int h = mainImage.Height;
             double mas = new double();
-            double[,] lul = new double[workingImage.Width,workingImage.Height];
-
-            for(int i = 0; i < workingImage.Width; i++)
-                for(int j = 0; j < workingImage.Height; j++)
+            double[,] lul = new double[w, h];
+            byte[] bytePic = ananas.ByteFromImage(mainImage);
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
                 {
-                    var pix = workingImage.GetPixel(i, j);      //Считываем пиксель
-                    lul[i, j] = (pix.R + pix.B + pix.G) / 3;
-                    mas += (pix.R + pix.B + pix.G) / 3;        //Считаем его яркость
+                    int r1 = bytePic[i * 3 + 2 + j * w * 3];
+                    int g1 = bytePic[i * 3 + 1 + j * w * 3];
+                    int b1 = bytePic[i * 3 + j * w * 3];
+                    
+                    lul[i, j] = (r1 + g1 + b1) / 3;
+                    mas += (r1 + g1 + b1) / 3;        //Считаем его яркость
                 }
-            mas = (int)(mas / (workingImage.Width * workingImage.Height));
+            mas = (int)(mas / (w * h));
 
-            for (int i = 0; i < workingImage.Width; i++)
-                for (int j = 0; j < workingImage.Height; j++)
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
                 {
                     if (lul[i, j] >= mas)
-                        workingImage.SetPixel(i, j, Color.FromArgb(255, 255, 255));
+                    {
+                        bytePic[i * 3 + 2 + j * w * 3] = 255;
+                        bytePic[i * 3 + 1 + j * w * 3] = 255;
+                        bytePic[i * 3 + j * w * 3] = 255;
+                    }
+                        //mainImage.SetPixel(i, j, Color.FromArgb(255, 255, 255));
                     else
-                        workingImage.SetPixel(i, j, Color.FromArgb(0, 0, 0));
+                    {
+                        bytePic[i * 3 + 2 + j * w * 3] = 0;
+                        bytePic[i * 3 + 1 + j * w * 3] = 0;
+                        bytePic[i * 3 + j * w * 3] = 0;
+                    }
+                        //mainImage.SetPixel(i, j, Color.FromArgb(0, 0, 0));
+                }
+            mainImage = ananas.ImageFromByte(bytePic, w, h);
+            SetPictureBox1And4FromMainImage();
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            if (panel5.Visible == false)
+                panel5.Visible = true;
+            else panel5.Visible = false;
+        }
+
+        private void Nublek_Sauvola_Woolf(int num)
+        {
+            int a = int.Parse(textBox4.Text);
+            int del = a * a;
+            double t = 0;
+            int min = 256;
+            int w = mainImage.Width;
+            int h = mainImage.Height;
+            int[] tmas = new int[h * w + 1];
+            int[,] pmas = new int[w + 1, h + 1];
+            double D, M2 = 0, maxo = 0;
+            int k = 0;
+            double[] M = new double[w * h + 1];
+            double[] o = new double[w * h + 1];
+            //Pix(pmas);
+            byte[] bytePic = ananas.ByteFromImage(mainImage);
+            for (int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
+                {
+                    int r1 = bytePic[j * 3 + i * w * 3 + 2];
+                    int g1 = bytePic[j * 3 + i * w * 3 + 1];
+                    int b1 = bytePic[j * 3 + i * w * 3];
+
+                    pmas[j, i] = (r1 + g1 + b1) / 3;     //Считаем его яркость
+                }
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    int ia = i - a / 2, 
+                        ja = j - a / 2, 
+                        i_a = i + a / 2, 
+                        j_a = j + a / 2, 
+                        ja1;
+                    if (ia <= 0)    ia = 0;
+                    if (i_a >= h)   i_a = h - 1;
+                    if (ja <= 0)    ja = 0;
+                    if (j_a >= w)   j_a = w - 1;
+                    ja1 = ja;
+                    int count = 0;
+                    while (ia <= i_a)
+                    {
+                        while (ja <= j_a)
+                        {
+                            int p = pmas[ja, ia];
+                            if (ia == i & ja == j) tmas[k] = p;
+                            M[k] += p;
+                            M2 += p * p;
+                            if (p < min) min = p;
+                            count++;
+                            ja++;
+                        }
+                        ia++;
+                        ja = ja1;
+                    }
+                    M[k] /= count;
+                    M2 /= count;
+                    D = M2 - M[k] * M[k];
+                    o[k] = Math.Sqrt(D);
+                    double sensitivity = double.Parse(textBox3.Text);
+                    switch (num)
+                    {
+                        case 1:
+                            {
+                                t = (M[k] + sensitivity * o[k]);
+                                break;
+                            }
+                        case 2:
+                            {
+                                t = (M[k] * (1 + sensitivity * (o[k] / 128 - 1)));
+                                break;
+                            }
+
+                    }
+                    if (o[k] > maxo) maxo = o[k];
+                    if (num != 3)
+                    {
+                        //Color pix;
+                        if (tmas[k] <= t)
+                        {
+                            //pix = Color.FromArgb(0, 0, 0);
+                            bytePic[j * 3 + i * w * 3 + 2] = 0;
+                            bytePic[j * 3 + i * w * 3 + 1] = 0;
+                            bytePic[j * 3 + i * w * 3] = 0;
+                        }
+                        else
+                        {
+                            bytePic[j * 3 + i * w * 3 + 2] = 255;
+                            bytePic[j * 3 + i * w * 3 + 1] = 255;
+                            bytePic[j * 3 + i * w * 3] = 255;
+                        }
+                        //mainImage.SetPixel(j, i, pix);
+                    }
+                    k++;
+                }
+            }
+            if (num == 3)
+            {
+                k = 0;
+                for (int i = 0; i < h; i++)
+                {
+                    for (int j = 0; j < w; j++)
+                    {
+                        t = (1 - 0.5) * M[k] + 0.5 * min + 0.5 * o[k] / maxo * (M[k] - min);
+                        //Color pix;
+                        if (tmas[k] <= t)
+                        {
+                            //pix = Color.FromArgb(0, 0, 0);
+                            bytePic[j * 3 + i * w * 3 + 2] = 0;
+                            bytePic[j * 3 + i * w * 3 + 1] = 0;
+                            bytePic[j * 3 + i * w * 3] = 0;
+                        }
+                        else
+                        {
+                            bytePic[j * 3 + i * w * 3 + 2] = 255;
+                            bytePic[j * 3 + i * w * 3 + 1] = 255;
+                            bytePic[j * 3 + i * w * 3] = 255;
+                            //pix = Color.FromArgb(255, 255, 255);
+                        }
+                        //mainImage.SetPixel(j, i, pix);
+                        k++;
+                    }
+                }
+            }
+            mainImage = ananas.ImageFromByte(bytePic, w, h);
+            SetPictureBox1And4FromMainImage();
+            //Grey();
+        }
+        private void Bradly_Rot()
+        {
+            int w = mainImage.Width;
+            int h = mainImage.Height;
+            int[] tmas = new int[h * w + 1];
+            int[,] pmas = new int[w + 1, h + 1]; int[,] S = new int[w + 1, h + 1];
+            //Pix(pmas);
+            byte[] bytePic = ananas.ByteFromImage(mainImage);
+            for (int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
+                {
+                    int r1 = bytePic[j * 3 + i * w * 3 + 2];
+                    int g1 = bytePic[j * 3 + i * w * 3 + 1];
+                    int b1 = bytePic[j * 3 + i * w * 3];
+
+                    pmas[j, i] = (r1 + g1 + b1) / 3;     //Считаем его яркость
                 }
 
-            
-            pictureBox1.Image = (Bitmap)workingImage;
-            pictureBox1.Refresh();
-           
-            result_image = (Bitmap)workingImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox4.Refresh();
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    S[j, i] += pmas[j, i];
+                    if (j != 0 & i != 0) S[j, i] += S[j - 1, i] + S[j, i - 1] - S[j - 1, i - 1];
+                    if (j == 0 & i != 0) S[j, i] += S[j, i - 1];
+                    if (j != 0 & i == 0) S[j, i] += S[j - 1, i];
+                }
+            }
+            int a = int.Parse(textBox4.Text);
+            double k = double.Parse(textBox3.Text);
+            //Pix(pmas);
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    int ia = i - a / 2, 
+                        ja = j - a / 2, 
+                        i_a = i + a / 2, 
+                        j_a = j + a / 2; 
+                    int x1, x2, y1, y2;
+                    if (ia <= 0) ia = 0;
+                    if (i_a >= h) i_a = h - 1;
+                    if (ja <= 0) ja = 0;
+                    if (j_a >= w) j_a = w - 1;
+                    x1 = ja; x2 = j_a; y1 = ia; y2 = i_a;
+                    int Sum = 0;
+                    if (x1 != 0 & y1 != 0) Sum = S[x2, y2] + S[x1 - 1, y1 - 1] - S[x1 - 1, y2] - S[x2, y1 - 1];
+                    if (x1 == 0 & y1 != 0) Sum = S[x2, y2] - S[x2, y1 - 1];
+                    if (x1 != 0 & y1 == 0) Sum = S[x2, y2] - S[x1 - 1, y2];
+
+                    //Color pix;
+                    if (pmas[j, i] * a * a < Sum * (1 - k))
+                    {
+                        //pix = Color.FromArgb(0, 0, 0);
+                        bytePic[j * 3 + i * w * 3 + 2] = 0;
+                        bytePic[j * 3 + i * w * 3 + 1] = 0;
+                        bytePic[j * 3 + i * w * 3] = 0;
+                    }
+                    else
+                    {
+                        //pix = Color.FromArgb(255, 255, 255);
+                        bytePic[j * 3 + i * w * 3 + 2] = 255;
+                        bytePic[j * 3 + i * w * 3 + 1] = 255;
+                        bytePic[j * 3 + i * w * 3] = 255;
+                    }
+                    //workingImage.SetPixel(j, i, pix);
+                }
+            }
+            mainImage = ananas.ImageFromByte(bytePic, w, h);
+            SetPictureBox1And4FromMainImage();
+            //Grey();
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox2.SelectedIndex == 0 ||
+               comboBox2.SelectedIndex == 1)
+            {
+                panel3.Size = new Size(128, 80);
+                comboBox2.Size = new Size(100, 80);
+
+                comboBox2.Location = new Point(14, 6);
+                button11.Location = new Point(25, 40);
+
+                label2.Visible = false;
+                label3.Visible = false;
+                textBox3.Visible = false;
+                textBox4.Visible = false;
+            }
+            else
+            {
+                //Size 195; 154
+                //Location comboBox 43; 10
+                //Location button 59; 118
+                panel3.Size = new Size(195, 154);
+
+                label2.Visible = true;
+                label3.Visible = true;
+                textBox3.Visible = true;
+                textBox4.Visible = true;
+
+                label3.Location = new Point(10, 50);
+                label2.Location = new Point(10, 82);
+                textBox3.Location = new Point(120, 48);
+                textBox4.Location = new Point(120, 78);
+                comboBox2.Location = new Point(43, 10);
+                button11.Location = new Point(59, 118);
+
+                switch (comboBox2.SelectedIndex)
+                {
+                    case 2:
+                        {
+                            textBox3.Text = "-0,2";
+                            textBox4.Text = "20";
+                            break;
+                        }
+                    case 3:
+                        {
+                            textBox3.Text = "0,2";
+                            textBox4.Text = "20";
+                            break;
+                        }
+                    case 4:
+                        {
+                            label3.Visible = false;
+                            textBox3.Text = "20";
+                            textBox4.Visible = false;
+                            break;
+                        }
+                    case 5:
+                        {
+                            textBox3.Text = "0,15";
+                            textBox4.Text = "20";
+                            break;
+                        }
+                    default:
+                        {
+                            textBox3.Text = "";
+                            textBox4.Text = "";
+                            break;
+                        }
+                }
+            }
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked)
+            {
+                choice_R = true;
+                choice_G = true;
+                choice_B = true;
+            }
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton2.Checked)
+            {
+                choice_R = true;
+                choice_G = false;
+                choice_B = false;
+            }
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton3.Checked)
+            {
+                choice_R = false;
+                choice_G = true;
+                choice_B = false;
+            }
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton4.Checked)
+            {
+                choice_R = false;
+                choice_G = false;
+                choice_B = true;
+            }
+        }
+
+        private void radioButton5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton5.Checked)
+            {
+                choice_R = true;
+                choice_G = true;
+                choice_B = false;
+            }
+        }
+
+        private void radioButton6_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton6.Checked)
+            {
+                choice_R = true;
+                choice_G = false;
+                choice_B = true;
+            }
+        }
+
+        private void radioButton7_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton7.Checked)
+            {
+                choice_R = false;
+                choice_G = true;
+                choice_B = true;
+            }
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            if (panel6.Visible == false)
+                panel6.Visible = true;
+            else
+                panel6.Visible = false;
         }
         private void Nublek_Sauvola_Bradly(int num)
         {
