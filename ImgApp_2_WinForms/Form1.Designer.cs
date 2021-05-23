@@ -72,13 +72,13 @@ namespace ImgApp_2_WinForms
             this.button13 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.button15 = new System.Windows.Forms.Button();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.panel1.SuspendLayout();
@@ -99,7 +99,7 @@ namespace ImgApp_2_WinForms
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(12, 60);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(928, 615);
+            this.pictureBox1.Size = new System.Drawing.Size(697, 384);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -114,7 +114,7 @@ namespace ImgApp_2_WinForms
             "Минимум",
             "Максимум",
             "Произведение"});
-            this.comboBox1.Location = new System.Drawing.Point(980, 421);
+            this.comboBox1.Location = new System.Drawing.Point(750, 251);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(97, 21);
             this.comboBox1.TabIndex = 6;
@@ -124,7 +124,7 @@ namespace ImgApp_2_WinForms
             // 
             this.pictureBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox4.Location = new System.Drawing.Point(980, 536);
+            this.pictureBox4.Location = new System.Drawing.Point(750, 328);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(99, 92);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -135,7 +135,7 @@ namespace ImgApp_2_WinForms
             // textBox1
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(980, 458);
+            this.textBox1.Location = new System.Drawing.Point(750, 275);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(99, 20);
             this.textBox1.TabIndex = 16;
@@ -154,7 +154,7 @@ namespace ImgApp_2_WinForms
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(978, 12);
+            this.button2.Location = new System.Drawing.Point(747, 12);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(122, 23);
             this.button2.TabIndex = 18;
@@ -165,7 +165,7 @@ namespace ImgApp_2_WinForms
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(980, 498);
+            this.button3.Location = new System.Drawing.Point(747, 299);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(99, 23);
             this.button3.TabIndex = 19;
@@ -176,7 +176,7 @@ namespace ImgApp_2_WinForms
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(982, 643);
+            this.button4.Location = new System.Drawing.Point(753, 426);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(96, 23);
             this.button4.TabIndex = 20;
@@ -269,18 +269,21 @@ namespace ImgApp_2_WinForms
             this.Column2});
             this.dataGridView1.Location = new System.Drawing.Point(37, 37);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.Size = new System.Drawing.Size(227, 123);
             this.dataGridView1.TabIndex = 4;
             // 
             // Column1
             // 
             this.Column1.HeaderText = "X";
+            this.Column1.MinimumWidth = 8;
             this.Column1.Name = "Column1";
             this.Column1.Width = 80;
             // 
             // Column2
             // 
             this.Column2.HeaderText = "Y";
+            this.Column2.MinimumWidth = 8;
             this.Column2.Name = "Column2";
             this.Column2.Width = 80;
             // 
@@ -311,10 +314,11 @@ namespace ImgApp_2_WinForms
             // 
             // pictureBox6
             // 
+            this.pictureBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox6.Location = new System.Drawing.Point(596, 65);
+            this.pictureBox6.Location = new System.Drawing.Point(453, 60);
             this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(260, 260);
+            this.pictureBox6.Size = new System.Drawing.Size(170, 177);
             this.pictureBox6.TabIndex = 23;
             this.pictureBox6.TabStop = false;
             this.pictureBox6.Visible = false;
@@ -410,9 +414,9 @@ namespace ImgApp_2_WinForms
             // 
             this.panel4.AutoScroll = true;
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Location = new System.Drawing.Point(953, 70);
+            this.panel4.Location = new System.Drawing.Point(721, 78);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(150, 307);
+            this.panel4.Size = new System.Drawing.Size(150, 167);
             this.panel4.TabIndex = 29;
             // 
             // panel5
@@ -461,7 +465,7 @@ namespace ImgApp_2_WinForms
             // 
             this.radioButton5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButton5.AutoSize = true;
-            this.radioButton5.Location = new System.Drawing.Point(68, 30);
+            this.radioButton5.Location = new System.Drawing.Point(67, 30);
             this.radioButton5.Name = "radioButton5";
             this.radioButton5.Size = new System.Drawing.Size(41, 17);
             this.radioButton5.TabIndex = 19;
@@ -487,7 +491,7 @@ namespace ImgApp_2_WinForms
             // 
             this.radioButton3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(9, 53);
+            this.radioButton3.Location = new System.Drawing.Point(8, 53);
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.Size = new System.Drawing.Size(33, 17);
             this.radioButton3.TabIndex = 17;
@@ -535,12 +539,13 @@ namespace ImgApp_2_WinForms
             // button13
             // 
             this.button13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button13.Location = new System.Drawing.Point(978, 41);
+            this.button13.Location = new System.Drawing.Point(747, 41);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(122, 23);
             this.button13.TabIndex = 32;
             this.button13.Text = "Удалить картинку";
             this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click_DeleteCheckedImages);
             // 
             // button14
             // 
@@ -567,6 +572,22 @@ namespace ImgApp_2_WinForms
             this.panel6.Size = new System.Drawing.Size(206, 136);
             this.panel6.TabIndex = 34;
             this.panel6.Visible = false;
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(120, 78);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(70, 20);
+            this.textBox7.TabIndex = 33;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(3, 81);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(97, 13);
+            this.label6.TabIndex = 32;
+            this.label6.Text = "Отступ вверх/низ";
             // 
             // textBox5
             // 
@@ -608,28 +629,13 @@ namespace ImgApp_2_WinForms
             this.button15.TabIndex = 27;
             this.button15.Text = "Применить";
             this.button15.UseVisualStyleBackColor = true;
-            // 
-            // textBox7
-            // 
-            this.textBox7.Location = new System.Drawing.Point(120, 78);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(70, 20);
-            this.textBox7.TabIndex = 33;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 81);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(97, 13);
-            this.label6.TabIndex = 32;
-            this.label6.Text = "Отступ вверх/низ";
+            this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1115, 690);
+            this.ClientSize = new System.Drawing.Size(874, 456);
             this.Controls.Add(this.panel6);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.button13);
@@ -652,6 +658,7 @@ namespace ImgApp_2_WinForms
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.panel1.ResumeLayout(false);

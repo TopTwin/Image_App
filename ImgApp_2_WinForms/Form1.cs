@@ -41,7 +41,7 @@ namespace ImgApp_2_WinForms
             comboBox2.SelectedIndex = 0;
 
             SetInitLocationElements();
-
+           // this.Size = new Size(1300,850);
         }
         private void SetInitLocationElements()
         {
@@ -54,7 +54,13 @@ namespace ImgApp_2_WinForms
             //25; 65
             panel1.Location = new Point(25, 65);
             //449; 62
-            panel6.Location = new Point(449, 66);
+            panel6.Location = new Point(453, 60);
+           // comboBox1.Location = new Point(1014, 495);
+           // textBox1.Location = new Point(1014, 533);
+           // button3.Location = new Point(1010, 569);
+           // pictureBox4.Location = new Point(1014, 614);
+           // button4.Location = new Point(1014, 764);
+            
         }
 
         private void Open_Click(object sender, EventArgs e)
@@ -68,7 +74,7 @@ namespace ImgApp_2_WinForms
                 mainImage = new Bitmap(openFileDialog.FileName);    //считываем картинку
                 workingPictures.AddNewPictureAndCheckBox(mainImage);    //создаем для картинки пикчрбокс
                 pictureBox1.Image = (Bitmap)mainImage.Clone();                      //отображаем ее в основном окне
-                workingPictures.SetLocationOnPanel();
+                workingPictures.SetElementsOnPanel();
                 if (panel1.Visible == true)
                     GisDraw();
             }
@@ -476,18 +482,18 @@ namespace ImgApp_2_WinForms
             if (comboBox1.SelectedIndex == 4)
             {
                 textBox1.Visible = true;
-                button3.Location = new Point(971, 498);
-                button4.Location = new Point(973, 643);
-                pictureBox4.Location = new Point(971, 536);
+                //button3.Location = new Point(971, 498);
+                //button4.Location = new Point(973, 643);
+                //pictureBox4.Location = new Point(971, 536);
 
             }
             else
             {
                 textBox1.Visible = false;
 
-                button3.Location = new Point(971, 498 - 35);
-                button4.Location = new Point(973, 643 - 35);
-                pictureBox4.Location = new Point(971, 536 - 35);
+                //button3.Location = new Point(971, 498 - 35);
+                //button4.Location = new Point(973, 643 - 35);
+                //pictureBox4.Location = new Point(971, 536 - 35);
             }
         }
 
@@ -747,6 +753,7 @@ namespace ImgApp_2_WinForms
                 case 2:     //Критерий Ниблека
                     {
                         Nublek_Sauvola_Woolf(1);
+                        break;
                     }
                 case 3:     //Критерий Сауволы
                     {
@@ -765,22 +772,7 @@ namespace ImgApp_2_WinForms
                     }
             }
         }
-        private void Pix(int[,] p)
-        {
-            int w = workingImage.Width;
-            int h = workingImage.Height;
-            for (int i = 0; i < h; i++)
-            {
-                for (int j = 0; j < w; j++)
-                {
-                    var pix1 = workingImage.GetPixel(j, i);
-                    int r1 = pix1.R;
-                    int g1 = pix1.G;
-                    int b1 = pix1.B;
-                    p[j, i] = (r1 + g1 + b1) / 3;
-                }
-            }
-        }
+        
         #region Binarizacia
 
         private void Otsu()
@@ -1165,8 +1157,8 @@ namespace ImgApp_2_WinForms
                     case 4:
                         {
                             label3.Visible = false;
-                            textBox3.Text = "20";
-                            textBox4.Visible = false;
+                            textBox4.Text = "20";
+                            textBox3.Visible = false;
                             break;
                         }
                     case 5:
@@ -1262,253 +1254,144 @@ namespace ImgApp_2_WinForms
             else
                 panel6.Visible = false;
         }
-        private void Nublek_Sauvola_Bradly(int num)
+
+        private void button15_Click(object sender, EventArgs e)
         {
-            int a = int.Parse(textBox4.Text); 
-            int del = a * a; 
-            int t = 0; 
-            int min = 256;
-            int w = workingImage.Width;
-            int h = workingImage.Height;
-            int[] tmas = new int[h * w + 1];
-            int[,] pmas = new int[w + 1, h + 1];
-            double D, M2 = 0, maxo = 0; 
-            int k = 0; 
-            double[] M = new double[w * h + 1]; 
-            double[] o = new double[w * h + 1];
-            Pix(pmas);
-            for (int i = 0; i < h; i++)
-            {
-                for (int j = 0; j < w; j++)
-                {
-                    int ia = i - a / 2, ja = j - a / 2, i_a = i + a / 2, j_a = j + a / 2, ja1;
-                    if (ia <= 0) ia = 0;
-                    if (i_a >= h) i_a = h - 1;
-                    if (ja <= 0) ja = 0;
-                    if (j_a >= w) j_a = w - 1;
-                    ja1 = ja;
-                    int count = 0;
-                    while (ia <= i_a)
-                    {
-                        while (ja <= j_a)
-                        {
-                            int p = pmas[ja, ia];
-                            if (ia == i & ja == j) tmas[k] = p;
-                            M[k] += p;
-                            M2 += p * p;
-                            if (p < min) min = p;
-                            count++;
-                            ja++;
-                        }
-                        ia++;
-                        ja = ja1;
-                    }
-                    M[k] /= count; 
-                    M2 /= count;
-                    D = M2 - M[k] * M[k]; 
-                    o[k] = Math.Sqrt(D);
-                    double sensitivity = double.Parse(textBox3.Text);
-                    switch (num)
-                    {
-                        case 1:
-                            {
-                                t = (int)(M[k] + sensitivity * o[k]);
-                                break;
-                            }
-                        case 2:
-                            {
-                                t = (int)(M[k] * (1 + sensitivity * (o[k] / 128 - 1)));
-                                break;
-                            }
+            int o = int.Parse(textBox6.Text);
+            int w = int.Parse(textBox5.Text);
+            int h = int.Parse(textBox7.Text);
 
-                    }
-                    if (o[k] > maxo) maxo = o[k];
-                    if (num != 3)
-                    {
-                        Color pix;
-                        if (tmas[k] <= t)
-                        {
-                            pix = Color.FromArgb(0, 0, 0);
-                        }
-                        else
-                        {
-                            pix = Color.FromArgb(255, 255, 255);
-                        }
-                        workingImage.SetPixel(j, i, pix);
-                    }
-                    k++;
-                }
-            }
-            if (num == 3)
+            double[,] mat = GetMatrix(o, w, h);
+            SpatialFiltering spatialFiltering = new SpatialFiltering(mainImage, w, h, mat);
+            double[,] test =
             {
-                k = 0;
-                for (int i = 0; i < h; i++)
-                {
-                    for (int j = 0; j < w; j++)
-                    {
-                        t = (int)((1 - 0.5) * M[k] + 0.5 * min + 0.5 * o[k] / maxo * (M[k] - min));
-                        Color pix;
-                        if (tmas[k] <= t)
-                        {
-                            pix = Color.FromArgb(0, 0, 0);
-                        }
-                        else
-                        {
-                            pix = Color.FromArgb(255, 255, 255);
-                        }
-                        workingImage.SetPixel(j, i, pix);
-                        k++;
-                    }
-                }
-            }
-            pictureBox1.Image = workingImage;
-            pictureBox1.Refresh();
+                {0.33 , 0.33, 0.33 },
+                {0.33 , 0.33, 0.33 },
+                {0.33 , 0.33, 0.33 }
+            };
 
-            result_image = (Bitmap)workingImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox4.Refresh();
-            //Grey();
+            spatialFiltering.SetMatrix(3,3,test);
+            mainImage = spatialFiltering.ApplyFilter();
+            spatialFiltering.SetPicture(mainImage);
+            SetPictureBox1And4FromMainImage();
         }
-        private void Bradly_Rot()
+        double[,] GetMatrix(int o, int  w, int h)
         {
-            int w = workingImage.Width;
-            int h = workingImage.Height;
-            int[] tmas = new int[h * w + 1];
-            int[,] pmas = new int[w + 1, h + 1]; int[,] S = new int[w + 1, h + 1];
-            Pix(pmas);
-            for (int i = 0; i < h; i++)
-            {
-                for (int j = 0; j < w; j++)
+            double[,] mat = new double[w, h]; 
+            int r1 = (w - 1) / 2;
+            int r2 = (h - 1) / 2;
+            double s = 0;
+            for(int i = 0; i < h; i++)
+                for(int j = 0; j < w; j++)
                 {
-                    S[j, i] += pmas[j, i];
-                    if (j != 0 & i != 0) S[j, i] += S[j - 1, i] + S[j, i - 1] - S[j - 1, i - 1];
-                    if (j == 0 & i != 0) S[j, i] += S[j, i - 1];
-                    if (j != 0 & i == 0) S[j, i] += S[j - 1, i];
+                    double g = 1.0 / (2.0 * Math.PI * o * o) * Math.Exp(-1.0 * ((i-r2) * (i-r2) + (j-r1) * (j-r1)) / (2.0 * o * o));
+                    s += g;
+                    mat[i, j] = g;
                 }
-            }
-            int a = int.Parse(textBox4.Text);
-            double k = double.Parse(textBox3.Text);
-            Pix(pmas);
-            for (int i = 0; i < h; i++)
-            {
-                for (int j = 0; j < w; j++)
-                {
-                    int ia = i - a / 2, ja = j - a / 2, i_a = i + a / 2, j_a = j + a / 2; int x1, x2, y1, y2;
-                    if (ia <= 0) ia = 0;
-                    if (i_a >= h) i_a = h - 1;
-                    if (ja <= 0) ja = 0;
-                    if (j_a >= w) j_a = w - 1;
-                    x1 = ja; x2 = j_a; y1 = ia; y2 = i_a;
-                    int Sum = 0;
-                    if (x1 != 0 & y1 != 0) Sum = S[x2, y2] + S[x1 - 1, y1 - 1] - S[x1 - 1, y2] - S[x2, y1 - 1];
-                    if (x1 == 0 & y1 != 0) Sum = S[x2, y2] - S[x2, y1 - 1];
-                    if (x1 != 0 & y1 == 0) Sum = S[x2, y2] - S[x1 - 1, y2];
+            return mat;
+        }
 
-                    Color pix;
-                    if (pmas[j, i] * a * a < Sum * (1 - k))
-                    {
-                        pix = Color.FromArgb(0, 0, 0);
-                    }
-                    else
-                    {
-                        pix = Color.FromArgb(255, 255, 255);
-                    }
-                    workingImage.SetPixel(j, i, pix);
-                }
-            }
-            pictureBox1.Image = workingImage;
-            pictureBox1.Refresh();
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
-            result_image = (Bitmap)workingImage.Clone();
-            pictureBox4.Image = result_image;
-            pictureBox4.Refresh();
-            //Grey();
+        }
+
+        private void button13_Click_DeleteCheckedImages(object sender, EventArgs e)
+        {
+            workingPictures.DeleteCheckedImages();
+            workingPictures.SetElementsOnPanel();
+            panel4.Refresh();
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+
         }
         #endregion
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBox2.SelectedIndex == 0 ||
-               comboBox2.SelectedIndex == 1)
-            {
-                panel3.Size = new Size(128, 80);
-                comboBox2.Size = new Size(100, 80);
-
-                comboBox2.Location = new Point(14, 6);
-                button11.Location = new Point(25, 40);
-
-                label2.Visible = false;
-                label3.Visible = false;
-                textBox3.Visible = false;
-                textBox4.Visible = false;
-            }
-            else
-            {
-                //Size 195; 154
-                //Location comboBox 43; 10
-                //Location button 59; 118
-                panel3.Size = new Size(223, 161);
-
-                label2.Visible = true;
-                label3.Visible = true;
-                textBox3.Visible = true;
-                textBox4.Visible = true;
-
-                label2.Location = new Point(10, 50);
-                label3.Location = new Point(10, 82);
-                textBox3.Location = new Point(120, 48);
-                textBox4.Location = new Point(120, 78);
-                comboBox2.Location = new Point(43, 10);
-                button11.Location = new Point(12, 125);
-                button12.Location = new Point(120, 125);
-            }
-
-            switch(comboBox2.SelectedIndex)
-            {
-                case 2:
-                    {
-                        textBox3.Text = "-0,2";
-                        textBox4.Text = "20";
-                        break;
-                    }
-                case 3:
-                    {
-                        textBox3.Text = "0,2";
-                        textBox4.Text = "20";
-                        break;
-                    }
-                case 4:
-                    {
-                        label2.Visible = false;
-                        textBox3.Visible = false;
-                        textBox4.Text = "20";
-                        break;
-                    }
-                case 5:
-                    {
-                        textBox3.Text = "0,15";
-                        textBox4.Text = "20";
-                        break;
-                    }
-                default:
-                    {
-                        textBox3.Text = "";
-                        textBox4.Text = "";
-                        break;
-                    }
-            }
-        }
-
-        private void button12_Click(object sender, EventArgs e)
-        {
-            dataGridView1.Rows.Clear();
-            dataGridView1.Refresh();
-            textBox2.Text = "";
-            if (pictureBox6.Visible == true)
-            {
-                if (pictureBox6.Image != null)
-                    pictureBox6.Image.Dispose();
-                pictureBox6.Image = new Bitmap(pictureBox6.Width, pictureBox6.Height);
-            }
-        }
+        //private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    if (comboBox2.SelectedIndex == 0 ||
+        //       comboBox2.SelectedIndex == 1)
+        //    {
+        //        panel3.Size = new Size(128, 80);
+        //        comboBox2.Size = new Size(100, 80);
+        //
+        //        comboBox2.Location = new Point(14, 6);
+        //        button11.Location = new Point(25, 40);
+        //
+        //        label2.Visible = false;
+        //        label3.Visible = false;
+        //        textBox3.Visible = false;
+        //        textBox4.Visible = false;
+        //    }
+        //    else
+        //    {
+        //        //Size 195; 154
+        //        //Location comboBox 43; 10
+        //        //Location button 59; 118
+        //        panel3.Size = new Size(223, 161);
+        //
+        //        label2.Visible = true;
+        //        label3.Visible = true;
+        //        textBox3.Visible = true;
+        //        textBox4.Visible = true;
+        //
+        //        label2.Location = new Point(10, 50);
+        //        label3.Location = new Point(10, 82);
+        //        textBox3.Location = new Point(120, 48);
+        //        textBox4.Location = new Point(120, 78);
+        //        comboBox2.Location = new Point(43, 10);
+        //        button11.Location = new Point(12, 125);
+        //        button12.Location = new Point(120, 125);
+        //    }
+        //
+        //    switch(comboBox2.SelectedIndex)
+        //    {
+        //        case 2:
+        //            {
+        //                textBox3.Text = "-0,2";
+        //                textBox4.Text = "20";
+        //                break;
+        //            }
+        //        case 3:
+        //            {
+        //                textBox3.Text = "0,2";
+        //                textBox4.Text = "20";
+        //                break;
+        //            }
+        //        case 4:
+        //            {
+        //                label2.Visible = false;
+        //                textBox3.Visible = false;
+        //                textBox4.Text = "20";
+        //                break;
+        //            }
+        //        case 5:
+        //            {
+        //                textBox3.Text = "0,15";
+        //                textBox4.Text = "20";
+        //                break;
+        //            }
+        //        default:
+        //            {
+        //                textBox3.Text = "";
+        //                textBox4.Text = "";
+        //                break;
+        //            }
+        //    }
+        //}
+        //
+        //private void button12_Click(object sender, EventArgs e)
+        //{
+        //    dataGridView1.Rows.Clear();
+        //    dataGridView1.Refresh();
+        //    textBox2.Text = "";
+        //    if (pictureBox6.Visible == true)
+        //    {
+        //        if (pictureBox6.Image != null)
+        //            pictureBox6.Image.Dispose();
+        //        pictureBox6.Image = new Bitmap(pictureBox6.Width, pictureBox6.Height);
+        //    }
+        //}
     }
 }

@@ -35,10 +35,7 @@ namespace ImgApp_2_WinForms
         {
             return pictureBoxes;
         }
-        public List<CheckBox> GetCheckBoxes()
-        {
-            return checkBoxes;
-        }
+        
         public List<int> GetNumbersCheckedBoxes()
         {
             List<int> ppp = new List<int>();
@@ -64,7 +61,7 @@ namespace ImgApp_2_WinForms
             checkBoxes.Add(checkBox);                       //добавляем в список
             panel.Controls.Add(checkBox);                   //закрепляем за панель
         }
-        public void SetLocationOnPanel()
+        public void SetElementsOnPanel()
         {
             int margin_top = 15; //px
             int marginLeftForPictureBox = 30; //px
@@ -82,6 +79,18 @@ namespace ImgApp_2_WinForms
                 point.Y = -10 + margin_top + (size.Height / 2) + i * size.Height;
                 checkBoxes[i].Location = point;
                 checkBoxes[i].Visible = true;
+            }
+        }
+        public void DeleteCheckedImages()
+        {
+            List<PictureBox> del = GetCheckedPictures();
+            for(int i =0; i < del.Count; i++)
+            {
+                int index = pictureBoxes.IndexOf(del[i]);
+                del[i].Dispose();
+                pictureBoxes.RemoveAt(index);
+                checkBoxes[index].Dispose();
+                checkBoxes.RemoveAt(index);
             }
         }
     }
