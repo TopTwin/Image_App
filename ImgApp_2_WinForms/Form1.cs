@@ -46,7 +46,7 @@ namespace ImgApp_2_WinForms
         private void SetInitLocationElements()
         {
             //955; 401
-            panel5.Location = new Point(955, 401);
+            panel5.Location = new Point(679, 279);
             //306; 65
             panel3.Location = new Point(306, 65);
             //140; 65
@@ -1262,32 +1262,38 @@ namespace ImgApp_2_WinForms
             int h = int.Parse(textBox7.Text);
 
             double[,] mat = GetMatrix(o, w, h);
-            SpatialFiltering spatialFiltering = new SpatialFiltering(mainImage, w, h, mat);
+            SpatialFiltering spatialFiltering = new SpatialFiltering((Bitmap)mainImage.Clone(), w, h, mat);
             double[,] test =
             {
-                {0.33 , 0.33, 0.33 },
-                {0.33 , 0.33, 0.33 },
-                {0.33 , 0.33, 0.33 }
+                {-1 , -1, -1 },
+                {-1 , 9,  -1 },
+                {-1 , -1, -1 }
             };
 
             spatialFiltering.SetMatrix(3,3,test);
-            mainImage = spatialFiltering.ApplyFilter();
-            spatialFiltering.SetPicture(mainImage);
+            mainImage = (Bitmap)spatialFiltering.ApplyFilter().Clone();
+            //spatialFiltering.SetPicture(mainImage);
             SetPictureBox1And4FromMainImage();
+            spatialFiltering.Dispose();
         }
         double[,] GetMatrix(int o, int  w, int h)
         {
-            double[,] mat = new double[w, h]; 
+            double[,] mat = new double[h, w]; 
             int r1 = (w - 1) / 2;
             int r2 = (h - 1) / 2;
             double s = 0;
-            for(int i = 0; i < h; i++)
-                for(int j = 0; j < w; j++)
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
                 {
-                    double g = 1.0 / (2.0 * Math.PI * o * o) * Math.Exp(-1.0 * ((i-r2) * (i-r2) + (j-r1) * (j-r1)) / (2.0 * o * o));
+                    double g = 1.0 / (2.0 * Math.PI * o * o) * Math.Exp(-1.0 * ((i - r2) * (i - r2) + (j - r1) * (j - r1)) / (2.0 * o * o));
                     s += g;
                     mat[i, j] = g;
+                    Console.Write(g + "    ");
                 }
+                Console.WriteLine();
+            }
+            Console.WriteLine("Sum: " + s);
             return mat;
         }
 
@@ -1303,10 +1309,57 @@ namespace ImgApp_2_WinForms
             panel4.Refresh();
         }
 
-        private void button16_Click(object sender, EventArgs e)
-        {
 
+        private void button16_Click_1(object sender, EventArgs e)
+        {
+            panel7.Visible = true;
+            panel6.Visible = false;
         }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            int w = int.Parse(textBox8.Text);
+            int h = int.Parse(textBox9.Text);
+
+            
+            for(int j = 0; j < w; j++)
+            {
+                dataGridView2.Columns.Add("name" + j, j.ToString());
+            }
+            for (int i = 0; i < h; i++)
+                dataGridView2.Rows.Add();
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            dataGridView2.Rows.Clear();
+            dataGridView2.Columns.Clear();
+            textBox8.Text = "";
+            textBox9.Text = "";
+
+            panel7.Visible = false;
+            panel6.Visible = true;
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            int w = int.Parse(textBox8.Text);
+            int h = int.Parse(textBox9.Text);
+            double[,] mat = new double[w, h];
+
+            for(int i = 0; i < h; i++)
+                for(int j = 0; j < w; j++)
+                {
+                    mat[i, j] = Convert.ToDouble(dataGridView2[i, j].Value);
+                }
+            SpatialFiltering spatialFiltering = new SpatialFiltering((Bitmap)mainImage.Clone(), w, h, mat);
+            
+            mainImage = (Bitmap)spatialFiltering.ApplyFilter().Clone();
+            //spatialFiltering.SetPicture(mainImage);
+            SetPictureBox1And4FromMainImage();
+            spatialFiltering.Dispose();
+        }
+
         #endregion
         //private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         //{

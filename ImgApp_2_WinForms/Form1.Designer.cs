@@ -72,6 +72,7 @@ namespace ImgApp_2_WinForms
             this.button13 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.button16 = new System.Windows.Forms.Button();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.textBox5 = new System.Windows.Forms.TextBox();
@@ -79,6 +80,15 @@ namespace ImgApp_2_WinForms
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.button15 = new System.Windows.Forms.Button();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.button18 = new System.Windows.Forms.Button();
+            this.button19 = new System.Windows.Forms.Button();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.button20 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBox9 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.panel1.SuspendLayout();
@@ -89,6 +99,8 @@ namespace ImgApp_2_WinForms
             this.panel3.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -99,7 +111,7 @@ namespace ImgApp_2_WinForms
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(12, 60);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(697, 384);
+            this.pictureBox1.Size = new System.Drawing.Size(638, 577);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -114,7 +126,7 @@ namespace ImgApp_2_WinForms
             "Минимум",
             "Максимум",
             "Произведение"});
-            this.comboBox1.Location = new System.Drawing.Point(750, 251);
+            this.comboBox1.Location = new System.Drawing.Point(688, 279);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(97, 21);
             this.comboBox1.TabIndex = 6;
@@ -124,7 +136,7 @@ namespace ImgApp_2_WinForms
             // 
             this.pictureBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox4.Location = new System.Drawing.Point(750, 328);
+            this.pictureBox4.Location = new System.Drawing.Point(688, 356);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(99, 92);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -135,7 +147,7 @@ namespace ImgApp_2_WinForms
             // textBox1
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(750, 275);
+            this.textBox1.Location = new System.Drawing.Point(688, 303);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(99, 20);
             this.textBox1.TabIndex = 16;
@@ -154,7 +166,7 @@ namespace ImgApp_2_WinForms
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(747, 12);
+            this.button2.Location = new System.Drawing.Point(688, 12);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(122, 23);
             this.button2.TabIndex = 18;
@@ -165,7 +177,7 @@ namespace ImgApp_2_WinForms
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(747, 299);
+            this.button3.Location = new System.Drawing.Point(685, 327);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(99, 23);
             this.button3.TabIndex = 19;
@@ -176,7 +188,7 @@ namespace ImgApp_2_WinForms
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(753, 426);
+            this.button4.Location = new System.Drawing.Point(691, 454);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(96, 23);
             this.button4.TabIndex = 20;
@@ -316,7 +328,7 @@ namespace ImgApp_2_WinForms
             // 
             this.pictureBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox6.Location = new System.Drawing.Point(453, 60);
+            this.pictureBox6.Location = new System.Drawing.Point(394, 60);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(170, 177);
             this.pictureBox6.TabIndex = 23;
@@ -358,7 +370,7 @@ namespace ImgApp_2_WinForms
             this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.button11);
             this.panel3.Controls.Add(this.comboBox2);
-            this.panel3.Location = new System.Drawing.Point(154, 536);
+            this.panel3.Location = new System.Drawing.Point(155, 395);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(206, 163);
             this.panel3.TabIndex = 8;
@@ -412,9 +424,10 @@ namespace ImgApp_2_WinForms
             // 
             // panel4
             // 
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.AutoScroll = true;
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Location = new System.Drawing.Point(721, 78);
+            this.panel4.Location = new System.Drawing.Point(660, 70);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(150, 167);
             this.panel4.TabIndex = 29;
@@ -429,7 +442,7 @@ namespace ImgApp_2_WinForms
             this.panel5.Controls.Add(this.radioButton3);
             this.panel5.Controls.Add(this.radioButton2);
             this.panel5.Controls.Add(this.radioButton1);
-            this.panel5.Location = new System.Drawing.Point(26, 580);
+            this.panel5.Location = new System.Drawing.Point(679, 279);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(123, 110);
             this.panel5.TabIndex = 30;
@@ -528,7 +541,8 @@ namespace ImgApp_2_WinForms
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(974, 384);
+            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button12.Location = new System.Drawing.Point(679, 250);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(108, 23);
             this.button12.TabIndex = 31;
@@ -539,7 +553,7 @@ namespace ImgApp_2_WinForms
             // button13
             // 
             this.button13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button13.Location = new System.Drawing.Point(747, 41);
+            this.button13.Location = new System.Drawing.Point(688, 41);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(122, 23);
             this.button13.TabIndex = 32;
@@ -560,6 +574,7 @@ namespace ImgApp_2_WinForms
             // panel6
             // 
             this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel6.Controls.Add(this.button16);
             this.panel6.Controls.Add(this.textBox7);
             this.panel6.Controls.Add(this.label6);
             this.panel6.Controls.Add(this.textBox5);
@@ -567,11 +582,21 @@ namespace ImgApp_2_WinForms
             this.panel6.Controls.Add(this.label4);
             this.panel6.Controls.Add(this.label5);
             this.panel6.Controls.Add(this.button15);
-            this.panel6.Location = new System.Drawing.Point(366, 563);
+            this.panel6.Location = new System.Drawing.Point(367, 395);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(206, 136);
+            this.panel6.Size = new System.Drawing.Size(206, 163);
             this.panel6.TabIndex = 34;
             this.panel6.Visible = false;
+            // 
+            // button16
+            // 
+            this.button16.Location = new System.Drawing.Point(109, 115);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(81, 34);
+            this.button16.TabIndex = 34;
+            this.button16.Text = "Собственная матрица";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click_1);
             // 
             // textBox7
             // 
@@ -585,9 +610,9 @@ namespace ImgApp_2_WinForms
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(3, 81);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(97, 13);
+            this.label6.Size = new System.Drawing.Size(93, 13);
             this.label6.TabIndex = 32;
-            this.label6.Text = "Отступ вверх/низ";
+            this.label6.Text = "Высота матрицы";
             // 
             // textBox5
             // 
@@ -617,25 +642,114 @@ namespace ImgApp_2_WinForms
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(3, 54);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(104, 13);
+            this.label5.Size = new System.Drawing.Size(94, 13);
             this.label5.TabIndex = 28;
-            this.label5.Text = "Отступ лево/право";
+            this.label5.Text = "Ширина матрицы";
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(60, 104);
+            this.button15.Location = new System.Drawing.Point(8, 115);
             this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(76, 22);
+            this.button15.Size = new System.Drawing.Size(76, 34);
             this.button15.TabIndex = 27;
             this.button15.Text = "Применить";
             this.button15.UseVisualStyleBackColor = true;
             this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
+            // panel7
+            // 
+            this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel7.Controls.Add(this.textBox9);
+            this.panel7.Controls.Add(this.label8);
+            this.panel7.Controls.Add(this.button18);
+            this.panel7.Controls.Add(this.button19);
+            this.panel7.Controls.Add(this.dataGridView2);
+            this.panel7.Controls.Add(this.button20);
+            this.panel7.Controls.Add(this.label7);
+            this.panel7.Controls.Add(this.textBox8);
+            this.panel7.Location = new System.Drawing.Point(326, 60);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(301, 202);
+            this.panel7.TabIndex = 35;
+            this.panel7.Visible = false;
+            // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(253, 11);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(37, 19);
+            this.button18.TabIndex = 6;
+            this.button18.Text = "ok";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click);
+            // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(197, 166);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(80, 21);
+            this.button19.TabIndex = 5;
+            this.button19.Text = "Отмена";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.AllowUserToAddRows = false;
+            this.dataGridView2.AllowUserToDeleteRows = false;
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Location = new System.Drawing.Point(37, 37);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.RowHeadersWidth = 5;
+            this.dataGridView2.Size = new System.Drawing.Size(227, 123);
+            this.dataGridView2.TabIndex = 4;
+            // 
+            // button20
+            // 
+            this.button20.Location = new System.Drawing.Point(19, 166);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(80, 21);
+            this.button20.TabIndex = 3;
+            this.button20.Text = "Применить";
+            this.button20.UseVisualStyleBackColor = true;
+            this.button20.Click += new System.EventHandler(this.button20_Click);
+            // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(4, 12);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(47, 19);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "Ширина";
+            // 
+            // textBox8
+            // 
+            this.textBox8.Location = new System.Drawing.Point(57, 11);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(55, 20);
+            this.textBox8.TabIndex = 1;
+            // 
+            // label8
+            // 
+            this.label8.Location = new System.Drawing.Point(118, 11);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(47, 19);
+            this.label8.TabIndex = 8;
+            this.label8.Text = "Высота";
+            // 
+            // textBox9
+            // 
+            this.textBox9.Location = new System.Drawing.Point(171, 10);
+            this.textBox9.Name = "textBox9";
+            this.textBox9.Size = new System.Drawing.Size(55, 20);
+            this.textBox9.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(874, 456);
+            this.ClientSize = new System.Drawing.Size(815, 649);
+            this.Controls.Add(this.panel7);
             this.Controls.Add(this.panel6);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.button13);
@@ -673,6 +787,9 @@ namespace ImgApp_2_WinForms
             this.panel5.PerformLayout();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -730,6 +847,16 @@ namespace ImgApp_2_WinForms
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.Button button20;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBox8;
     }
 }
 
