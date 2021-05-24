@@ -9,6 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Imaging;
+//using System.Numerics;
+using AForge.Math;
 
 namespace ImgApp_2_WinForms
 {
@@ -1270,7 +1273,7 @@ namespace ImgApp_2_WinForms
                 {-1 , -1, -1 }
             };
 
-            spatialFiltering.SetMatrix(3,3,test);
+            //spatialFiltering.SetMatrix(3,3,test);
             mainImage = (Bitmap)spatialFiltering.ApplyFilter().Clone();
             //spatialFiltering.SetPicture(mainImage);
             SetPictureBox1And4FromMainImage();
@@ -1345,12 +1348,12 @@ namespace ImgApp_2_WinForms
         {
             int w = int.Parse(textBox8.Text);
             int h = int.Parse(textBox9.Text);
-            double[,] mat = new double[w, h];
+            double[,] mat = new double[h, w];
 
             for(int i = 0; i < h; i++)
                 for(int j = 0; j < w; j++)
                 {
-                    mat[i, j] = Convert.ToDouble(dataGridView2[i, j].Value);
+                    mat[i, j] = Convert.ToDouble(dataGridView2[j, i].Value);
                 }
             SpatialFiltering spatialFiltering = new SpatialFiltering((Bitmap)mainImage.Clone(), w, h, mat);
             
@@ -1358,6 +1361,188 @@ namespace ImgApp_2_WinForms
             //spatialFiltering.SetPicture(mainImage);
             SetPictureBox1And4FromMainImage();
             spatialFiltering.Dispose();
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            Bitmap test = new Bitmap(mainImage, 256, 512);
+            byte[] lul = ananas.ByteFromImage(test);
+            int w = test.Width;
+            int h = test.Height;
+
+            Complex[] pointsR = new Complex[w];
+            Complex[] pointsG = new Complex[w];
+            Complex[] pointsB = new Complex[w];
+
+            Complex[,] MorepointsR = new Complex[h,w];
+            Complex[,] MorepointsG = new Complex[h,w];
+            Complex[,] MorepointsB = new Complex[h,w];
+
+            for(int i = 0; i < h; i++)
+                for(int j = 0; j < w; j++)
+                {
+                    MorepointsR[i, j] = new Complex(lul[i * w * 3 + j * 3 + 2] * Math.Pow((-1), i + j),0);
+                    MorepointsG[i, j] = new Complex(lul[i * w * 3 + j * 3 + 1] * Math.Pow((-1), i + j),0);
+                    MorepointsB[i, j] = new Complex(lul[i * w * 3 + j * 3]* Math.Pow((-1), i + j),0);
+                }
+           
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    pointsR[j] = MorepointsR[i, j];
+                    pointsG[j] = MorepointsG[i, j];
+                    pointsB[j] = MorepointsB[i, j];
+                }
+                FourierTransform.FFT(pointsR,FourierTransform.Direction.Backward);
+                FourierTransform.FFT(pointsG,FourierTransform.Direction.Backward);
+                FourierTransform.FFT(pointsB,FourierTransform.Direction.Backward);
+
+                for(int j = 0; j < w; j++)
+                {
+                    MorepointsR[i, j] = pointsR[j];
+                    MorepointsG[i, j] = pointsG[j];
+                    MorepointsB[i, j] = pointsB[j];
+                }
+            }
+            
+            pointsR = new Complex[h];
+            pointsG = new Complex[h];
+            pointsB = new Complex[h];
+
+            for (int j = 0; j < w; j++)
+            {
+                for(int i = 0; i < h; i++)
+                {
+                    pointsR[i] = MorepointsR[i, j];
+                    pointsG[i] = MorepointsG[i, j];
+                    pointsB[i] = MorepointsB[i, j];
+                }
+                FourierTransform.FFT(pointsR, FourierTransform.Direction.Backward);
+                FourierTransform.FFT(pointsG, FourierTransform.Direction.Backward);
+                FourierTransform.FFT(pointsB, FourierTransform.Direction.Backward);
+
+                for (int i = 0; i < h; i++)
+                {
+                    MorepointsR[i, j] = pointsR[i];
+                    MorepointsG[i, j] = pointsG[i];
+                    MorepointsB[i, j] = pointsB[i];
+                }
+            }
+
+           // for (int i = 0; i < h; i++)
+           //     for (int j = 0; j < w; j++)
+           //     {
+           //         MorepointsR[i, j] *= Math.Pow((-1), i + j);
+           //         MorepointsG[i, j] *= Math.Pow((-1), i + j);
+           //         MorepointsB[i, j] *= Math.Pow((-1), i + j);
+           //     }
+
+
+            double buf;
+            double maxR = 0;
+            double maxG = 0;
+            double maxB = 0;
+            #region Эта залупа кое-как работает
+            for (int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
+                {
+                    if (maxR < Math.Log(Math.Sqrt(MorepointsR[i, j].Re * MorepointsR[i, j].Re +
+                                                  MorepointsR[i, j].Im * MorepointsR[i, j].Im)))
+                    
+                        maxR = Math.Log(Math.Sqrt(MorepointsR[i, j].Re * MorepointsR[i, j].Re +
+                                                  MorepointsR[i, j].Im * MorepointsR[i, j].Im));
+            
+                    if (maxG < Math.Log(Math.Sqrt(MorepointsG[i, j].Re * MorepointsG[i, j].Re +
+                                                  MorepointsG[i, j].Im * MorepointsG[i, j].Im)))
+            
+                        maxG = Math.Log(Math.Sqrt(MorepointsG[i, j].Re * MorepointsG[i, j].Re +
+                                                  MorepointsG[i, j].Im * MorepointsG[i, j].Im));
+            
+                    if (maxB < Math.Log(Math.Sqrt(MorepointsB[i, j].Re * MorepointsB[i, j].Re +
+                                                  MorepointsB[i, j].Im * MorepointsB[i, j].Im)))
+            
+                        maxB = Math.Log(Math.Sqrt(MorepointsB[i, j].Re * MorepointsB[i, j].Re +
+                                                  MorepointsB[i, j].Im * MorepointsB[i, j].Im));
+                }
+
+            for (int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
+                {
+                    buf = 255 * Math.Log(Math.Sqrt(MorepointsR[i, j].Re * MorepointsR[i, j].Re +
+                                                   MorepointsR[i, j].Im * MorepointsR[i, j].Im)) / maxR;
+                    lul[i * w * 3 + j * 3 + 2] = (byte)buf;
+                    if (buf > 255)
+                        lul[i * w * 3 + j * 3 + 2] = 255;
+
+                    buf = 255 * Math.Log(Math.Sqrt(MorepointsG[i, j].Re * MorepointsG[i, j].Re +
+                                                   MorepointsG[i, j].Im * MorepointsG[i, j].Im)) / maxG;
+                    lul[i * w * 3 + j * 3 + 1] = (byte)buf;
+                    if (buf > 255)
+                        lul[i * w * 3 + j * 3 + 1] = 255;
+
+                    buf = 255 * Math.Log(Math.Sqrt(MorepointsB[i, j].Re * MorepointsB[i, j].Re +
+                                                   MorepointsB[i, j].Im * MorepointsB[i, j].Im)) / maxB;
+            
+                    lul[i * w * 3 + j * 3] = (byte)buf;
+                    if (buf > 255)
+                        lul[i * w * 3 + j * 3] = 255;
+                }
+            #endregion
+
+            #region Эта залупа поинтересней
+            for (int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
+                {
+                    if (maxR < Math.Sqrt(MorepointsR[i, j].Re * MorepointsR[i, j].Re +
+                                                  MorepointsR[i, j].Im * MorepointsR[i, j].Im))
+
+                        maxR = Math.Sqrt(MorepointsR[i, j].Re * MorepointsR[i, j].Re +
+                                                  MorepointsR[i, j].Im * MorepointsR[i, j].Im);
+
+                    if (maxG < Math.Sqrt(MorepointsG[i, j].Re * MorepointsG[i, j].Re +
+                                                  MorepointsG[i, j].Im * MorepointsG[i, j].Im))
+
+                        maxG = Math.Sqrt(MorepointsG[i, j].Re * MorepointsG[i, j].Re +
+                                                  MorepointsG[i, j].Im * MorepointsG[i, j].Im);
+
+                    if (maxB < Math.Sqrt(MorepointsB[i, j].Re * MorepointsB[i, j].Re +
+                                                  MorepointsB[i, j].Im * MorepointsB[i, j].Im))
+
+                        maxB = Math.Sqrt(MorepointsB[i, j].Re * MorepointsB[i, j].Re +
+                                                  MorepointsB[i, j].Im * MorepointsB[i, j].Im);
+                }
+
+            for (int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
+                {
+                    buf = 25000 * Math.Sqrt(MorepointsR[i, j].Re * MorepointsR[i, j].Re +
+                                                   MorepointsR[i, j].Im * MorepointsR[i, j].Im) / maxR;
+                    lul[i * w * 3 + j * 3 + 2] = (byte)buf;
+                    if (buf > 255)
+                        lul[i * w * 3 + j * 3 + 2] = 255;
+
+                    buf = 25000 * Math.Sqrt(MorepointsG[i, j].Re * MorepointsG[i, j].Re +
+                                                   MorepointsG[i, j].Im * MorepointsG[i, j].Im) / maxG;
+                    lul[i * w * 3 + j * 3 + 1] = (byte)buf;
+                    if (buf > 255)
+                        lul[i * w * 3 + j * 3 + 1] = 255;
+                    
+                    buf = 25000 * Math.Sqrt(MorepointsB[i, j].Re * MorepointsB[i, j].Re +
+                                                   MorepointsB[i, j].Im * MorepointsB[i, j].Im) / maxB;
+
+                    lul[i * w * 3 + j * 3] = (byte)buf;
+                    if (buf > 255)
+                        lul[i * w * 3 + j * 3] = 255;
+                }
+            #endregion
+
+            mainImage = ananas.ImageFromByte(lul,256,512);
+            SetPictureBox1And4FromMainImage();
+            //FurieTrans furieTrans = new FurieTrans();
+
+            //furieTrans.dpf(pointsR, pointsG, pointsB, pointsR.Count());
+            int z = 0;
         }
 
         #endregion

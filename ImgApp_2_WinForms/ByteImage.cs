@@ -46,7 +46,19 @@ class ananas
             return img_ret;
         }
     }
+    public static Bitmap Image8bbpFromByte(byte[] bytes, int width, int height)
+    {
+        if (width <= 0 || height <= 0)
+            return null;
+        else
+        {
+            Bitmap img_ret = new Bitmap(width, height, PixelFormat.Format8bppIndexed);
 
+            writeImageBytes(img_ret, bytes);
+
+            return img_ret;
+        }
+    }
     //public static Bitmap SomeFunction(Bitmap input)
     //{
     //    int width = input.Width;
